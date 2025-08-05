@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Devanagari:700,600,400|IBM+Plex+Sans:400");
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0px;
+        height: 100%;
+      }
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+      a {
+        text-decoration: none;
+      }
+      .iphone {
+        background-color: #f5f4f7;
+        display: grid;
+        justify-items: center;
+        align-items: start;
+        width: 100vw;
+        min-height: 100vh;
+        height: 100%;
+      }
+      .iphone .div {
+        background-color: #f5f4f7;
+        width: 393px;
+        height: 852px;
+        position: relative;
+      }
+      .iphone .frame {
+        display: flex;
+        width: 393px;
+        height: 69px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0px 12px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #ffffff;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-color: #e6e6e6;
+      }
+      .iphone .frame-2 {
+        position: relative;
+        flex: 1;
+        flex-grow: 1;
+        height: 24px;
+      }
+      .iphone .text-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+        flex: 1;
+        flex-grow: 1;
+      }
+      .iphone .text {
+        position: relative;
+        width: fit-content;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 700;
+        color: #000000;
+        font-size: 20px;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+      .iphone .frame-3 {
+        display: flex;
+        flex-direction: column;
+        width: 349px;
+        align-items: center;
+        gap: 32px;
+        padding: 24px 20px 44px;
+        position: absolute;
+        top: 186px;
+        left: 22px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        border-top-width: 3px;
+        border-top-style: solid;
+        border-color: #fb8383;
+      }
+      .iphone .loan-settlement-wrapper {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+        flex: 0 0 auto;
+      }
+      .iphone .loan-settlement {
+        position: relative;
+        width: 286px;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 12px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: 28px;
+      }
+      .iphone .span {
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 28px;
+      }
+      .iphone .text-wrapper-2 {
+        font-weight: 700;
+        font-size: 24px;
+      }
+      .iphone .frame-4 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+      .iphone .p {
+        position: relative;
+        align-self: stretch;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 12px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+      .iphone .group {
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .iphone .text-area {
+        width: 309px;
+        height: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        position: relative;
+      }
+      .iphone .text-area-base {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        position: relative;
+        flex: 1;
+        align-self: stretch;
+        width: 100%;
+        flex-grow: 1;
+      }
+      .iphone .text-input {
+        padding: 12px;
+        flex: 1;
+        align-self: stretch;
+        width: 100%;
+        flex-grow: 1;
+        background-color: var(--neutralswhite);
+        border-radius: 10px;
+        border: 0.5px solid;
+        border-color: #003049;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        position: relative;
+      }
+      .iphone .value {
+        position: relative;
+        align-self: stretch;
+        margin-top: -0.5px;
+        font-family: "IBM Plex Sans", Helvetica;
+        font-weight: 400;
+        color: #2d3648;
+        font-size: 14px;
+        letter-spacing: -0.14px;
+        line-height: 21px;
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+      }
+      .iphone .value::placeholder {
+        color: #2d364870;
+      }
+      .iphone .button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        background-color: #000000;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .iphone .button:hover {
+        background-color: #333333;
+      }
+      .iphone .label {
+        position: relative;
+        width: fit-content;
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+      .iphone .frame-5 {
+        display: flex;
+        flex-direction: column;
+        width: 183px;
+        align-items: center;
+        gap: 3px;
+        position: relative;
+        flex: 0 0 auto;
+      }
+      .iphone .view-the-terms-and {
+        position: relative;
+        align-self: stretch;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 400;
+        color: #bdbdbd;
+        font-size: 10px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+      .iphone .text-wrapper-3 {
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 400;
+        color: #bdbdbd;
+        font-size: 10px;
+        letter-spacing: 0;
+      }
+      .iphone .text-wrapper-4 {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .iphone .text-wrapper-5 {
+        position: relative;
+        align-self: stretch;
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 400;
+        color: #bdbdbd;
+        font-size: 10px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal {
+        background-color: #ffffff;
+        width: 349px;
+        border-radius: 16px;
+        border-top: 3px solid #fb8383;
+        padding: 24px 20px 24px;
+        position: relative;
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .modal-title {
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 700;
+        color: #000000;
+        font-size: 18px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+
+      .modal-subtitle {
+        font-family: "IBM Plex Sans", Helvetica;
+        font-weight: 400;
+        color: #666666;
+        font-size: 12px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: 18px;
+        max-width: 280px;
+      }
+
+      .otp-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .otp-input-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .otp-label {
+        font-family: "IBM Plex Sans", Helvetica;
+        font-weight: 600;
+        color: #000000;
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+
+      .otp-input {
+        padding: 12px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        border: 0.5px solid #003049;
+        font-family: "IBM Plex Sans", Helvetica;
+        font-weight: 400;
+        color: #2d3648;
+        font-size: 16px;
+        letter-spacing: 2px;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.2s ease;
+      }
+
+      .otp-input:focus {
+        border-color: #fb8383;
+        border-width: 1px;
+      }
+
+      .otp-input::placeholder {
+        color: #2d364870;
+        letter-spacing: normal;
+      }
+
+      .modal-button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background-color: #000000;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .modal-button:hover {
+        background-color: #333333;
+      }
+
+      .modal-button-label {
+        font-family: "IBM Plex Sans Devanagari", Helvetica;
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+      }
+
+      .resend-text {
+        font-family: "IBM Plex Sans", Helvetica;
+        font-weight: 400;
+        color: #bdbdbd;
+        font-size: 10px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+        margin-top: 12px;
+      }
+
+      .resend-link {
+        color: #fb8383;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      .resend-link:hover {
+        color: #e66b6b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="iphone" data-model-id="161:5560">
+      <div class="div">
+        <div class="frame">
+          <div class="frame-2"></div>
+          <div class="text-wrapper"><div class="text">Bridgetrust</div></div>
+          <div class="frame-2"></div>
+        </div>
+        <div class="frame-3">
+          <div class="loan-settlement-wrapper">
+            <p class="loan-settlement">
+              <span class="span">Loan Settlement Platform<br /></span>
+              <span class="text-wrapper-2">Bridgetrust Finance<br />limited</span>
+            </p>
+          </div>
+          <div class="frame-4">
+            <p class="p">Enter your registered company phone number or the Company ID number to proceed.</p>
+            <form class="group" id="phoneForm" action="{{ url_for('index') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+              <div class="text-area">
+                <div class="text-area-base">
+                  <div class="text-input">
+                    <input
+                      type="tel"
+                      class="value"
+                      placeholder="e.g. 09xx-xxx-xxx"
+                      name="phone"
+                      id="phoneInput"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="button"><div class="label">Proceed</div></button>
+            </form>
+          </div>
+          <div class="frame-5">
+            <p class="view-the-terms-and">
+              <span class="text-wrapper-3">view the </span>
+              <span class="text-wrapper-4">terms</span>
+              <span class="text-wrapper-3"> and </span>
+              <span class="text-wrapper-4">conditions</span>
+              <span class="text-wrapper-3">&nbsp;&nbsp;of service</span>
+            </p>
+            <div class="text-wrapper-5">All rights reserved ©</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTP Modal -->
+    <div class="modal-overlay" id="otpModal">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Verify OTP</div>
+          <div class="modal-subtitle">
+            OTP has been sent to your mobile number. Please enter the 6-digit code to proceed.
+          </div>
+        </div>
+
+        <form class="otp-form" id="otpForm" action="{{ url_for('index') }}>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+          <div class="otp-input-container">
+            <label class="otp-label" for="otpInput">Enter OTP</label>
+            <input
+              type="text"
+              class="otp-input"
+              placeholder="000000"
+              name="otp"
+              id="otpInput"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              required
+            />
+          </div>
+
+          <button type="submit" class="modal-button">
+            <div class="modal-button-label">Verify</div>
+          </button>
+        </form>
+
+        <div class="resend-text">
+          Didn't receive the code? <span class="resend-link" id="resendOtp">Resend OTP</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('phoneForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const phoneInput = document.getElementById('phoneInput');
+        const phoneNumber = phoneInput.value.trim();
+
+        if (phoneNumber) {
+          // Show OTP modal instead of alert
+          document.getElementById('otpModal').classList.add('show');
+          document.getElementById('otpInput').focus();
+        } else {
+          alert('Please enter a phone number');
+        }
+      });
+
+      // OTP Form submission
+      document.getElementById('otpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const otpInput = document.getElementById('otpInput');
+        const otpCode = otpInput.value.trim();
+
+        if (otpCode && otpCode.length === 6) {
+          alert('OTP verified successfully: ' + otpCode);
+          // Close modal
+          document.getElementById('otpModal').classList.remove('show');
+          // Here you would typically send the OTP to your server for verification
+        } else {
+          alert('Please enter a valid 6-digit OTP');
+        }
+      });
+
+      // Resend OTP functionality
+      document.getElementById('resendOtp').addEventListener('click', function() {
+        alert('OTP has been resent to your mobile number');
+        // Here you would typically trigger a resend OTP API call
+      });
+
+      // Close modal when clicking outside
+      document.getElementById('otpModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('show');
+        }
+      });
+
+      // Phone number formatting (original functionality)
+      document.getElementById('phoneInput').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length >= 4) {
+          value = value.substring(0, 4) + '-' + value.substring(4, 7) + '-' + value.substring(7, 10);
+        }
+        e.target.value = value;
+      });
+
+      // OTP input formatting - only allow numbers
+      document.getElementById('otpInput').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        e.target.value = value;
+      });
+    </script>
+  </body>
+</html>
