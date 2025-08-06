@@ -1,0 +1,918 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>{{ month_display }} Payment Details - CBU Portal</title>
+    <style>
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0px;
+            min-height: 100%;
+            font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        button:focus-visible {
+            outline: 2px solid #4a90e2 !important;
+            outline: -webkit-focus-ring-color auto 5px !important;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Container for all screen sizes */
+        .container {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            width: 100%;
+            padding: 0;
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 393px;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header section */
+        .header-section {
+            padding: 20px 20px 16px 20px;
+            background-color: #f4f9fa;
+            border-bottom: 1px solid #fa1e1e;
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            font-weight: 500;
+            color: #000000;
+            font-size: 16px;
+            letter-spacing: -0.16px;
+            line-height: 24px;
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-weight: 300;
+            color: #333333;
+            font-size: 12px;
+            letter-spacing: -0.12px;
+            line-height: 18px;
+            margin: 0;
+        }
+
+        /* Back button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            color: #333;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        .back-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Content section */
+        .content-section {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Schedule card */
+        .schedule-card {
+            border: 1px solid #c8ccd3;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .schedule-header {
+            padding: 12px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .schedule-title {
+            font-weight: 500;
+            color: #000000;
+            font-size: 12px;
+            letter-spacing: 0;
+            line-height: normal;
+            margin: 0;
+        }
+
+        .schedule-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .borrower-count {
+            font-weight: 400;
+            color: #000000;
+            font-size: 8px;
+            letter-spacing: 0;
+            line-height: normal;
+        }
+
+        .divider {
+            width: 1px;
+            height: 8px;
+            background-color: #c8ccd3;
+        }
+
+        .schedule-code {
+            font-weight: 400;
+            color: #000000;
+            font-size: 8px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+        }
+
+        /* Borrower table */
+        .borrower-table {
+            background-color: #ffffff;
+            border: 0.5px solid #9ca0a4;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0 18px 12px 18px;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 0.5px solid #c8ccd3;
+            background-color: #fafafa;
+        }
+
+        .header-checkbox {
+            width: 32px;
+            flex-shrink: 0;
+        }
+
+        .header-name {
+            flex: 1;
+            padding: 10px;
+            font-weight: 400;
+            color: #7a929e;
+            font-size: 8px;
+            letter-spacing: -0.08px;
+            line-height: 12px;
+        }
+
+        .header-amount {
+            width: 108px;
+            padding: 10px;
+            text-align: center;
+            font-weight: 400;
+            color: #7a929e;
+            font-size: 8px;
+            letter-spacing: -0.08px;
+            line-height: 24px;
+            flex-shrink: 0;
+        }
+
+        /* Borrower rows */
+        .borrower-row {
+            display: flex;
+            align-items: center;
+            min-height: 36px;
+            padding: 8px 0 0 12px;
+        }
+
+        .row-checkbox {
+            width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+
+        .checkbox-wrapper {
+            width: 15px;
+            height: 15px;
+            background-color: #ffffff;
+            border: 2px solid #5f749f;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-wrapper.selected {
+            background-color: #fa0c0c;
+            border-color: #fa0c0c;
+        }
+
+        .checkbox-icon {
+            width: 7.12px;
+            height: 5.81px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .checkbox-wrapper.selected .checkbox-icon {
+            opacity: 1;
+        }
+
+        .borrower-info {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .borrower-name {
+            font-weight: 500;
+            color: #000000;
+            font-size: 12px;
+            letter-spacing: 0;
+            line-height: 16.8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .borrower-nrc {
+            font-weight: 300;
+            color: #000000;
+            font-size: 8px;
+            letter-spacing: -0.08px;
+            line-height: 12px;
+        }
+
+        .borrower-phone {
+            font-weight: 300;
+            color: #666666;
+            font-size: 7px;
+            letter-spacing: -0.07px;
+            line-height: 10px;
+        }
+
+        .borrower-amount {
+            width: 108px;
+            padding: 2px 10px 10px;
+            text-align: center;
+            font-weight: 500;
+            color: #28a745;
+            font-size: 12px;
+            letter-spacing: 0;
+            line-height: 16.8px;
+            flex-shrink: 0;
+        }
+
+        /* Download button */
+        .download-section {
+            margin: 0 18px 18px 18px;
+        }
+
+        .download-button {
+            width: 100%;
+            height: 48px;
+            background-color: #e4e5e6;
+            border: none;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button:hover {
+            background-color: #d4d5d6;
+        }
+
+        .download-text {
+            font-weight: 500;
+            color: #000000;
+            font-size: 12px;
+            letter-spacing: 0;
+            line-height: 16.8px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Bottom section */
+        .bottom-section {
+            position: sticky;
+            bottom: 0;
+            background-color: #ffffff;
+            padding: 16px 20px;
+            border-top: 1px solid #c8ccd3;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-shrink: 0;
+        }
+
+        .total-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .total-label {
+            font-weight: 400;
+            color: #000000;
+            font-size: 8px;
+            letter-spacing: -0.08px;
+            line-height: 12px;
+        }
+
+        .total-amount {
+            font-weight: 600;
+            color: #000000;
+            font-size: 16px;
+            letter-spacing: -0.16px;
+            line-height: 24px;
+        }
+
+        .proceed-button {
+            all: unset;
+            box-sizing: border-box;
+            display: flex;
+            height: 46px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            flex: 1;
+            background-color: #fa0c0c;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .proceed-button:hover {
+            background-color: #e00b0b;
+        }
+
+        .proceed-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .proceed-button-text {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 16px;
+            letter-spacing: -0.16px;
+            line-height: 24px;
+        }
+
+        /* Tablet styles */
+        @media (min-width: 768px) {
+            .main-content {
+                max-width: 600px;
+                margin: 20px;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .header-section {
+                padding: 30px 40px 24px 40px;
+            }
+
+            .header-title {
+                font-size: 18px;
+                line-height: 26px;
+            }
+
+            .header-subtitle {
+                font-size: 14px;
+                line-height: 20px;
+            }
+
+            .back-button {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+
+            .back-icon {
+                width: 16px;
+                height: 16px;
+            }
+
+            .content-section {
+                padding: 30px 40px;
+                gap: 24px;
+            }
+
+            .schedule-header {
+                padding: 16px 24px;
+            }
+
+            .schedule-title {
+                font-size: 14px;
+            }
+
+            .borrower-count, .schedule-code {
+                font-size: 10px;
+            }
+
+            .borrower-table {
+                margin: 0 24px 16px 24px;
+            }
+
+            .header-name, .header-amount {
+                font-size: 10px;
+                padding: 12px;
+            }
+
+            .header-amount {
+                width: 120px;
+            }
+
+            .borrower-row {
+                min-height: 44px;
+                padding: 12px 0 0 16px;
+            }
+
+            .row-checkbox {
+                width: 40px;
+                margin-right: 12px;
+            }
+
+            .checkbox-wrapper {
+                width: 18px;
+                height: 18px;
+            }
+
+            .borrower-info {
+                padding: 12px;
+            }
+
+            .borrower-name {
+                font-size: 14px;
+                line-height: 18px;
+            }
+
+            .borrower-nrc, .borrower-phone {
+                font-size: 10px;
+                line-height: 14px;
+            }
+
+            .borrower-amount {
+                width: 120px;
+                font-size: 14px;
+                line-height: 18px;
+            }
+
+            .download-section {
+                margin: 0 24px 24px 24px;
+            }
+
+            .download-button {
+                height: 52px;
+            }
+
+            .download-text {
+                font-size: 14px;
+            }
+
+            .bottom-section {
+                padding: 20px 40px;
+                gap: 32px;
+            }
+
+            .total-label {
+                font-size: 10px;
+            }
+
+            .total-amount {
+                font-size: 18px;
+            }
+
+            .proceed-button {
+                height: 52px;
+                padding: 12px 32px;
+            }
+
+            .proceed-button-text {
+                font-size: 18px;
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+            .container {
+                padding: 40px;
+            }
+
+            .main-content {
+                max-width: 800px;
+                border-radius: 24px;
+            }
+
+            .header-section {
+                padding: 40px 60px 32px 60px;
+            }
+
+            .header-title {
+                font-size: 20px;
+                line-height: 28px;
+            }
+
+            .header-subtitle {
+                font-size: 16px;
+                line-height: 24px;
+            }
+
+            .content-section {
+                padding: 40px 60px;
+                gap: 32px;
+            }
+
+            .schedule-header {
+                padding: 20px 32px;
+            }
+
+            .schedule-title {
+                font-size: 16px;
+            }
+
+            .borrower-count, .schedule-code {
+                font-size: 12px;
+            }
+
+            .borrower-table {
+                margin: 0 32px 20px 32px;
+            }
+
+            .header-name, .header-amount {
+                font-size: 12px;
+                padding: 16px;
+            }
+
+            .header-amount {
+                width: 140px;
+            }
+
+            .borrower-row {
+                min-height: 52px;
+                padding: 16px 0 0 20px;
+            }
+
+            .row-checkbox {
+                width: 44px;
+                margin-right: 16px;
+            }
+
+            .checkbox-wrapper {
+                width: 20px;
+                height: 20px;
+            }
+
+            .borrower-info {
+                padding: 16px;
+            }
+
+            .borrower-name {
+                font-size: 16px;
+                line-height: 20px;
+            }
+
+            .borrower-nrc, .borrower-phone {
+                font-size: 12px;
+                line-height: 16px;
+            }
+
+            .borrower-amount {
+                width: 140px;
+                font-size: 16px;
+                line-height: 20px;
+            }
+
+            .download-section {
+                margin: 0 32px 32px 32px;
+            }
+
+            .download-button {
+                height: 56px;
+            }
+
+            .download-text {
+                font-size: 16px;
+            }
+
+            .bottom-section {
+                padding: 24px 60px;
+                gap: 40px;
+            }
+
+            .total-label {
+                font-size: 12px;
+            }
+
+            .total-amount {
+                font-size: 20px;
+            }
+
+            .proceed-button {
+                height: 56px;
+                padding: 16px 40px;
+                max-width: 200px;
+            }
+
+            .proceed-button-text {
+                font-size: 18px;
+            }
+        }
+
+        /* Large desktop styles */
+        @media (min-width: 1440px) {
+            .main-content {
+                max-width: 1000px;
+            }
+        }
+
+        /* Mobile-first responsive adjustments */
+        @media (max-width: 375px) {
+            .header-section {
+                padding: 16px 16px 12px 16px;
+            }
+
+            .content-section {
+                padding: 16px;
+            }
+
+            .schedule-header {
+                padding: 10px 14px;
+            }
+
+            .borrower-table {
+                margin: 0 14px 10px 14px;
+            }
+
+            .borrower-row {
+                padding: 6px 0 0 8px;
+            }
+
+            .download-section {
+                margin: 0 14px 14px 14px;
+            }
+
+            .bottom-section {
+                padding: 12px 16px;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- Header Section -->
+            <div class="header-section">
+                <a href="/monthly_payment_schedules" class="back-button">
+                    <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Back to Schedules
+                </a>
+                <div class="header-title">{{ month_display }} Payment Details</div>
+                <p class="header-subtitle">Review borrower payment details for {{ month_display }}. Select borrowers to process payments.</p>
+            </div>
+
+            <!-- Content Section -->
+            <div class="content-section">
+                {% if borrowers_data %}
+                    <div class="schedule-card">
+                        <div class="schedule-header">
+                            <div class="schedule-title">{{ month_display }} Loan Payments Schedule</div>
+                            <div class="schedule-meta">
+                                <div class="borrower-count">{{ borrowers_data|length }} Borrower{{ 's' if borrowers_data|length != 1 else '' }}</div>
+                                <div class="divider"></div>
+                                <div class="schedule-code">Month Reference: {{ month }}</div>
+                            </div>
+                        </div>
+
+                        <div class="borrower-table">
+                            <div class="table-header">
+                                <div class="header-checkbox"></div>
+                                <div class="header-name">Borrower Details</div>
+                                <div class="header-amount">Amount (USD)</div>
+                            </div>
+
+                            {% for borrower in borrowers_data %}
+                                <div class="borrower-row">
+                                    <div class="row-checkbox">
+                                        <div class="checkbox-wrapper" onclick="toggleBorrowerSelection(this, '{{ borrower.loan_id }}')">
+                                            <svg class="checkbox-icon" viewBox="0 0 8 6" fill="none">
+                                                <path d="M1 3L3 5L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="borrower-info">
+                                        <div class="borrower-name">{{ borrower.first_name }} {{ borrower.last_name }}</div>
+                                        <div class="borrower-nrc">NRC No. {{ borrower.nrc_number or 'N/A' }}</div>
+                                        {% if borrower.phone_number %}
+                                            <div class="borrower-phone">Phone: {{ borrower.phone_number }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="borrower-amount">${{ "%.2f" | format(borrower.monthly_payment) }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="download-section">
+                            <button class="download-button" onclick="downloadSchedule()">
+                                <div class="download-text">Download {{ month_display }} Schedule</div>
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-title">No Borrowers Found</div>
+                        <div class="empty-state-subtitle">There are no borrowers with upcoming payments for {{ month_display }}.</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Bottom Section -->
+            {% if borrowers_data %}
+                <div class="bottom-section">
+                    <div class="total-info">
+                        <div class="total-label">Selected Total</div>
+                        <div class="total-amount" id="totalAmount">$0.00</div>
+                    </div>
+                    <button class="proceed-button" id="proceedBtn" disabled onclick="proceedToPayment()">
+                        <div class="proceed-button-text">Proceed to Payment</div>
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+<script>
+        let selectedBorrowers = new Set();
+        let borrowerAmounts = {};
+
+        // Initialize borrower amounts
+        {% if borrowers_data %}
+            {% for borrower in borrowers_data %}
+                borrowerAmounts['{{ borrower.loan_id }}'] = {{ borrower.monthly_payment }};
+            {% endfor %}
+        {% endif %}
+
+        function toggleBorrowerSelection(checkbox, loanId) {
+            const isSelected = checkbox.classList.contains('selected');
+
+            if (isSelected) {
+                checkbox.classList.remove('selected');
+                selectedBorrowers.delete(loanId);
+            } else {
+                checkbox.classList.add('selected');
+                selectedBorrowers.add(loanId);
+            }
+
+            updateTotalAndButton();
+        }
+
+        function updateTotalAndButton() {
+            let total = 0;
+            selectedBorrowers.forEach(loanId => {
+                total += borrowerAmounts[loanId] || 0;
+            });
+
+            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+
+            const proceedBtn = document.getElementById('proceedBtn');
+            if (selectedBorrowers.size > 0) {
+                proceedBtn.disabled = false;
+                proceedBtn.style.opacity = '1';
+            } else {
+                proceedBtn.disabled = true;
+                proceedBtn.style.opacity = '0.6';
+            }
+        }
+
+        function downloadSchedule() {
+            // Implement download functionality
+            alert(`Downloading {{ month_display }} payment schedule...`);
+        }
+
+        function proceedToPayment() {
+            if (selectedBorrowers.size === 0) return;
+
+            const selectedLoanIds = Array.from(selectedBorrowers);
+            const totalAmount = Array.from(selectedBorrowers).reduce((sum, loanId) => {
+                return sum + (borrowerAmounts[loanId] || 0);
+            }, 0);
+
+            console.log('Selected loan IDs:', selectedLoanIds);
+            console.log('Total amount:', totalAmount);
+
+            // Option 1: Using GET with query parameters (current approach - keep this)
+            const params = new URLSearchParams({
+                month: '{{ month }}',
+                loan_ids: selectedLoanIds.join(','),
+                total: totalAmount.toFixed(2)
+            });
+            window.location.href = `/repayment_summary?${params.toString()}`;
+
+            // Option 2: Using POST with form data (uncomment to use this instead)
+            /*
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/repayment_summary';
+
+            // Add month field
+            const monthField = document.createElement('input');
+            monthField.type = 'hidden';
+            monthField.name = 'month';
+            monthField.value = '{{ month }}';
+            form.appendChild(monthField);
+
+            // Add loan_ids field
+            const loanIdsField = document.createElement('input');
+            loanIdsField.type = 'hidden';
+            loanIdsField.name = 'loan_ids';
+            loanIdsField.value = selectedLoanIds.join(',');
+            form.appendChild(loanIdsField);
+
+            // Add total field
+            const totalField = document.createElement('input');
+            totalField.type = 'hidden';
+            totalField.name = 'total';
+            totalField.value = totalAmount.toFixed(2);
+            form.appendChild(totalField);
+
+            // Submit form
+            document.body.appendChild(form);
+            form.submit();
+            */
+        }
+
+        // Initialize
+        updateTotalAndButton();
+    </script>
+</body>
+</html>
+{% endblock %}

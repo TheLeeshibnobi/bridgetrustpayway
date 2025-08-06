@@ -1,7 +1,8 @@
 import os
 from supabase import create_client, Client as SupabaseClient
 from flask import session
-from twilio.rest import Client as TwilioClient  # avoid name clash
+from twilio.rest import Client as TwilioClient  # avoid name
+import re
 
 class UserAuthentication:
     def __init__(self):
@@ -49,30 +50,47 @@ class UserAuthentication:
             return False
 
 
+
+    def clean_phone_number(self, phone):
+        phone = phone.strip()
+        # Keep + at the beginning if it exists, then keep only digits
+        if phone.startswith('+'):
+            cleaned = '+' + re.sub(r'\D', '', phone[1:])  # keep +, remove non-digits after
+        else:
+            cleaned = re.sub(r'\D', '', phone)  # remove all non-digits
+
+        return cleaned
+
     def check_organisation_number(self, phone):
-        """checks if that number is in that organisations numbers"""
+        """Checks if that number is in an organisation's phone numbers array and returns the organisation ID if found."""
         try:
+            cleaned_phone = self.clean_phone_number(phone)
+
+            print(f"Original phone: {phone}")
+            print(f"Cleaned phone: {cleaned_phone}")
+
             response = (
                 self.supabase
                 .table('organisations')
-                .select('org_phone_numbers')
-                .filter('org_phone_numbers', 'cs', f'"{phone}"')  # 'cs' stands for "contains"
+                .select('id, org_phone_numbers')
+                .filter('org_phone_numbers', 'cs', f'{{{cleaned_phone}}}')  # Array format
                 .execute()
             )
 
             if response.data:
-                print(f'{phone} exists in the database')
-                return True
+                organisation_id = response.data[0]['id']
+                print(f'{cleaned_phone} exists in the database under organisation ID {organisation_id}')
+                return True, organisation_id
             else:
-                print(f'{phone} does not exists in the database')
+                print(f'{cleaned_phone} does not exist in the database')
+                return False, None
 
         except Exception as e:
-            print(f"Error verifying OTP: {e}")
-            return False
+            print(f"Error checking phone number: {e}")
+            return False, None
 
 
-test = UserAuthentication()
-print(test)
+
 
 
 

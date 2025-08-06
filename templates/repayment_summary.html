@@ -1,0 +1,701 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0px;
+        height: 100%;
+      }
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+      a {
+        text-decoration: none;
+      }
+
+      .checkout-container {
+        background-color: #f5f4f7;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .checkout-wrapper {
+        background-color: #f5f4f7;
+        width: 100%;
+        max-width: 393px;
+        min-height: 600px;
+        position: relative;
+      }
+
+      /* Desktop styles */
+      @media (min-width: 768px) {
+        .checkout-container {
+          padding: 40px;
+          align-items: center;
+        }
+
+        .checkout-wrapper {
+          max-width: 500px;
+          min-height: 700px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          border-radius: 20px;
+          padding: 20px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .checkout-wrapper {
+          max-width: 600px;
+          min-height: 800px;
+          padding: 30px;
+        }
+      }
+
+      .text-wrapper {
+        position: absolute;
+        width: calc(100% - 82px);
+        top: 41px;
+        left: 41px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 18px;
+        letter-spacing: -0.18px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper {
+          font-size: 24px;
+          line-height: 32px;
+          top: 30px;
+          left: 30px;
+          width: calc(100% - 60px);
+        }
+      }
+
+      .frame {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 48px);
+        max-width: 346px;
+        align-items: flex-start;
+        gap: 24px;
+        padding: 20px 25px 30px;
+        position: absolute;
+        top: 87px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ffffff;
+        border-radius: 16px;
+      }
+
+      @media (min-width: 768px) {
+        .frame {
+          max-width: 450px;
+          width: calc(100% - 60px);
+          top: 100px;
+          padding: 30px 35px 40px;
+          gap: 30px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .frame {
+          max-width: 550px;
+          padding: 40px 45px 50px;
+          gap: 35px;
+        }
+      }
+
+      .interface-shopping {
+        position: relative;
+        width: 24px;
+        height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .interface-shopping {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
+      .frame-2 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+
+      .text-wrapper-2 {
+        position: relative;
+        align-self: stretch;
+        height: 20px;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-2 {
+          font-size: 20px;
+          line-height: 28px;
+          height: 24px;
+        }
+      }
+
+      .frame-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+        background-color: #f9fafa;
+        border: 1px solid;
+        border-color: #000000;
+      }
+
+      .frame-3 {
+        display: flex;
+        height: 56px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 12px;
+        position: relative;
+        flex: 1;
+        flex-grow: 1;
+        background-color: #f9fafa;
+        border-radius: 10px;
+      }
+
+      @media (min-width: 768px) {
+        .frame-3 {
+          height: 64px;
+          padding: 18px 16px;
+        }
+      }
+
+      .text-wrapper-3 {
+        position: relative;
+        width: 48.84px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #2d364885;
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 16.8px;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-3 {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+
+      .text-wrapper-4 {
+        position: relative;
+        width: 87px;
+        margin-top: -0.5px;
+        font-family: "IBM Plex Sans Condensed-Regular", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 20px;
+        text-align: right;
+        letter-spacing: 0;
+        line-height: 28px;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-4 {
+          font-size: 28px;
+          line-height: 36px;
+          width: auto;
+          min-width: 87px;
+        }
+      }
+
+      .frame-4 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+
+      .frame-5 {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 0px 0px 5px;
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .vector-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 15px;
+        height: 15px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+        background-color: #000000;
+        border-radius: 100px;
+        flex-shrink: 0;
+      }
+
+      @media (min-width: 768px) {
+        .vector-wrapper {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .vector {
+        position: relative;
+        width: 7.12px;
+        height: 5.81px;
+      }
+
+      .text-wrapper-5,
+      .text-wrapper-7 {
+        position: relative;
+        flex: 1;
+        margin: 0 10px;
+        font-family: "IBM Plex Sans Devanagari-Light", Helvetica;
+        font-weight: 300;
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: -0.12px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-5,
+        .text-wrapper-7 {
+          font-size: 14px;
+          line-height: 28px;
+        }
+      }
+
+      .text-wrapper-6,
+      .text-wrapper-8,
+      .text-wrapper-10 {
+        position: relative;
+        font-family: "IBM Plex Sans Devanagari-Regular", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 12px;
+        text-align: right;
+        letter-spacing: -0.12px;
+        line-height: 24px;
+        flex-shrink: 0;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-6,
+        .text-wrapper-8,
+        .text-wrapper-10 {
+          font-size: 14px;
+          line-height: 28px;
+        }
+      }
+
+      .frame-6 {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0px 0px 0px 41px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+
+      .text-wrapper-9 {
+        position: relative;
+        flex: 1;
+        font-family: "IBM Plex Sans Devanagari-Light", Helvetica;
+        font-weight: 300;
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: -0.12px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-9 {
+          font-size: 14px;
+          line-height: 28px;
+        }
+      }
+
+      .button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        width: 100%;
+        height: 52px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        position: relative;
+        background-color: #fa0c0c;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .button:hover {
+        background-color: #e00a0a;
+      }
+
+      @media (min-width: 768px) {
+        .button {
+          height: 60px;
+          padding: 12px 32px;
+        }
+      }
+
+      .label {
+        position: relative;
+        width: fit-content;
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        color: #ffffff;
+        font-size: 16px;
+        letter-spacing: 0;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 768px) {
+        .label {
+          font-size: 18px;
+          line-height: 28px;
+        }
+      }
+
+      .frame-7 {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .line {
+        position: relative;
+        flex: 1;
+        flex-grow: 1;
+        height: 1px;
+        background-color: #ddd;
+      }
+
+      .text-wrapper-11 {
+        position: relative;
+        padding: 0 15px;
+        font-family: "IBM Plex Sans Devanagari-Regular", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 16px;
+        text-align: center;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .text-wrapper-11 {
+          font-size: 18px;
+          line-height: 28px;
+        }
+      }
+
+      .frame-8 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+
+      .frame-9 {
+        display: flex;
+        min-height: 48px;
+        align-items: flex-start;
+        gap: 15px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+      }
+
+      @media (min-width: 768px) {
+        .frame-9 {
+          min-height: 56px;
+        }
+      }
+
+      .label-wrapper {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        position: relative;
+        align-self: stretch;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 0.5px solid;
+        border-color: #000000;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .label-wrapper:hover {
+        background-color: #f8f9fa;
+      }
+
+      @media (min-width: 768px) {
+        .label-wrapper {
+          padding: 12px 32px;
+        }
+      }
+
+      .p {
+        position: relative;
+        width: fit-content;
+        font-family: "IBM Plex Sans Devanagari-Light", Helvetica;
+        font-weight: 400;
+        color: transparent;
+        font-size: 16px;
+        letter-spacing: 0;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 768px) {
+        .p {
+          font-size: 18px;
+          line-height: 28px;
+        }
+      }
+
+      .span {
+        font-weight: 300;
+        color: #000000;
+      }
+
+      .text-wrapper-12 {
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        color: #fa1e1e;
+      }
+
+      .text-wrapper-13 {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        font-family: "IBM Plex Sans Devanagari-Regular", Helvetica;
+        font-weight: 400;
+        color: #ffffff;
+        font-size: 8px;
+        letter-spacing: -0.08px;
+        line-height: 11.2px;
+        white-space: nowrap;
+        background-color: #fa0c0c;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .for-making-payments-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 50px;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+        position: relative;
+        background-color: #f1f3f3;
+        border-radius: 10px;
+      }
+
+      @media (min-width: 768px) {
+        .for-making-payments-wrapper {
+          padding: 15px;
+          min-height: 60px;
+        }
+      }
+
+      .for-making-payments {
+        position: relative;
+        align-self: stretch;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 400;
+        color: transparent;
+        font-size: 8px;
+        letter-spacing: -0.08px;
+        line-height: 15px;
+      }
+
+      @media (min-width: 768px) {
+        .for-making-payments {
+          font-size: 10px;
+          line-height: 18px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .for-making-payments {
+          font-size: 12px;
+          line-height: 20px;
+        }
+      }
+
+      .text-wrapper-14 {
+        font-weight: 700;
+        color: #fa0c0c;
+        letter-spacing: -0.01px;
+      }
+
+      .text-wrapper-15 {
+        font-family: "IBM Plex Sans Devanagari-Regular", Helvetica;
+        color: #000000;
+        letter-spacing: -0.01px;
+      }
+    </style>
+
+    <script>
+      // Calculate totals from Flask variables
+      const loanPaymentAmount = {{ total|float if total else 0 }};
+      const transferCharges = 50.00;
+      const grandTotal = loanPaymentAmount + transferCharges;
+
+      // Update the display when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        // Update loan payments amount
+        document.querySelector('.text-wrapper-6').textContent = `$${loanPaymentAmount.toFixed(2)}`;
+
+        // Update transfer charges
+        document.querySelector('.text-wrapper-8').textContent = `$${transferCharges.toFixed(2)}`;
+
+        // Update total in red box (main display)
+        document.querySelector('.text-wrapper-4').textContent = `${grandTotal.toFixed(2)}`;
+
+        // Update final total
+        document.querySelector('.text-wrapper-10').textContent = `$${grandTotal.toFixed(2)}`;
+      });
+    </script>
+
+    <div class="checkout-container">
+      <div class="checkout-wrapper">
+        <div class="text-wrapper">Checkout</div>
+        <div class="frame">
+          <img class="interface-shopping" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMuNzQgMTVIOC43MzU3QzEwLjI2MzcgMTUgMTAuNDE3NyAxNC42ODIgMTAuNTIzNyAxNC4zMzJMMTIuNTUzNyA4Ljc5NEMxMi42MzE3IDguNTg2IDEyLjUzNzcgOC4zNTIgMTIuMzUzNyA4LjE5NEMxMi4xNjk3IDguMDM2IDExLjkxNzcgNy45NzQgMTEuNjgzNyA4LjAzNEw0LjA1MzcgOS44OThDMy43ODk3IDkuOTY0IDMuNjEzNyAxMC4yMDggMy42MTM3IDEwLjQ4VjE0LjVDMy42MTM3IDE0Ljc3NiAzLjgzNzcgMTUgNC4xMTM3IDE1SDMuNzRaIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTggMTlDOC41NTIyOCAxOSA5IDE4LjU1MjMgOSAxOEM5IDE3LjQ0NzcgOC41NTIyOCAxNyA4IDE3QzcuNDQ3NzIgMTcgNyAxNy40NDc3IDcgMThDNyAxOC41NTIzIDcuNDQ3NzIgMTkgOCAxOVoiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8cGF0aCBkPSJNMTcgMTlDMTcuNTUyMyAxOSAxOCAxOC41NTIzIDE4IDE4QzE4IDE3LjQ0NzcgMTcuNTUyMyAxNyAxNyAxN0MxNi40NDc3IDE3IDE2IDE3LjQ0NzcgMTYgMThDMTYgMTguNTUyMyAxNi40NDc3IDE5IDE3IDE5WiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" />
+          <div class="frame-2"><div class="text-wrapper-2">Payment</div></div>
+          <div class="frame-2">
+            <div class="frame-wrapper">
+              <div class="frame-3">
+                <div class="text-wrapper-3">USD</div>
+                <div class="text-wrapper-4">0.00</div>
+              </div>
+            </div>
+            <div class="frame-4">
+              <div class="frame-5">
+                <div class="vector-wrapper">
+                  <svg class="vector" width="8" height="6" viewBox="0 0 8 6" fill="none">
+                    <path d="M7 1L4 4L1 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="text-wrapper-5">Loan Payments</div>
+                <div class="text-wrapper-6">$0.00</div>
+              </div>
+              <div class="frame-5">
+                <div class="vector-wrapper">
+                  <svg class="vector" width="8" height="6" viewBox="0 0 8 6" fill="none">
+                    <path d="M7 1L4 4L1 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="text-wrapper-7">Transfer Charges</div>
+                <div class="text-wrapper-8">$50.00</div>
+              </div>
+              <div class="frame-6">
+                <div class="text-wrapper-9">Total</div>
+                <div class="text-wrapper-10">$0.00</div>
+              </div>
+            </div>
+          </div>
+          <button class="button"><div class="label">Pay Now</div></button>
+          <div class="frame-7">
+            <div class="line"></div>
+            <div class="text-wrapper-11">or</div>
+            <div class="line"></div>
+          </div>
+          <div class="frame-8">
+            <div class="frame-9">
+              <div class="label-wrapper">
+                <p class="p">
+                  <span class="span">Upload Proof of payment </span> <span class="text-wrapper-12">*</span>
+                </p>
+              </div>
+              <div class="text-wrapper-13">!</div>
+            </div>
+            <div class="for-making-payments-wrapper">
+              <p class="for-making-payments">
+                <span class="text-wrapper-14">* </span>
+                <span class="text-wrapper-15"
+                  >For making payments through bank transfer or bank deposit, ensure to use the Schedule reference code
+                  and upload proof of payment.</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+{% endblock %}

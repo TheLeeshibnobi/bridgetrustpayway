@@ -288,7 +288,35 @@
         line-height: normal;
       }
 
-      /* Modal Styles */
+      /* Flash Messages */
+      .flash-messages {
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 349px;
+      }
+
+      .flash-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        border: 1px solid #f5c6cb;
+        font-family: "IBM Plex Sans", Helvetica;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .flash-message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border-color: #c3e6cb;
+      }
+
+      /* OTP Modal */
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -296,165 +324,122 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-        display: none;
+        display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
       }
 
       .modal-overlay.show {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
       }
 
-      .modal {
+      .modal-content {
         background-color: #ffffff;
         width: 349px;
         border-radius: 16px;
         border-top: 3px solid #fb8383;
-        padding: 24px 20px 24px;
+        padding: 24px 20px 44px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
         position: relative;
-        animation: modalSlideIn 0.3s ease-out;
       }
 
-      @keyframes modalSlideIn {
-        from {
-          transform: translateY(-50px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
+      .modal-overlay.show .modal-content {
+        transform: scale(1);
       }
 
       .modal-header {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 32px;
+        justify-content: center;
+        gap: 10px;
       }
 
       .modal-title {
+        width: 286px;
+        margin-top: -1px;
         font-family: "IBM Plex Sans Devanagari", Helvetica;
-        font-weight: 700;
-        color: #000000;
-        font-size: 18px;
-        text-align: center;
-        letter-spacing: 0;
-        line-height: normal;
-      }
-
-      .modal-subtitle {
-        font-family: "IBM Plex Sans", Helvetica;
         font-weight: 400;
-        color: #666666;
+        color: #000000;
         font-size: 12px;
         text-align: center;
         letter-spacing: 0;
-        line-height: 18px;
-        max-width: 280px;
+        line-height: 28px;
       }
 
-      .otp-form {
+      .modal-title .highlight {
+        font-weight: 700;
+        font-size: 24px;
+      }
+
+      .modal-form {
         display: flex;
         flex-direction: column;
-        gap: 20px;
-      }
-
-      .otp-input-container {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .otp-label {
-        font-family: "IBM Plex Sans", Helvetica;
-        font-weight: 600;
-        color: #000000;
-        font-size: 14px;
-        letter-spacing: 0;
-        line-height: normal;
-      }
-
-      .otp-input {
-        padding: 12px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        border: 0.5px solid #003049;
-        font-family: "IBM Plex Sans", Helvetica;
-        font-weight: 400;
-        color: #2d3648;
-        font-size: 16px;
-        letter-spacing: 2px;
-        text-align: center;
-        outline: none;
-        transition: border-color 0.2s ease;
-      }
-
-      .otp-input:focus {
-        border-color: #fb8383;
-        border-width: 1px;
-      }
-
-      .otp-input::placeholder {
-        color: #2d364870;
-        letter-spacing: normal;
-      }
-
-      .modal-button {
-        all: unset;
-        box-sizing: border-box;
-        display: flex;
-        height: 50px;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 10px 24px;
-        background-color: #000000;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+        gap: 12px;
+        width: 100%;
       }
 
-      .modal-button:hover {
-        background-color: #333333;
-      }
-
-      .modal-button-label {
-        font-family: "IBM Plex Sans Devanagari", Helvetica;
-        font-weight: 600;
-        color: #ffffff;
-        font-size: 16px;
-        letter-spacing: -0.16px;
-        line-height: 24px;
-      }
-
-      .resend-text {
+      .modal-description {
+        align-self: stretch;
+        margin-top: -1px;
         font-family: "IBM Plex Sans", Helvetica;
         font-weight: 400;
-        color: #bdbdbd;
-        font-size: 10px;
+        color: #000000;
+        font-size: 12px;
         text-align: center;
         letter-spacing: 0;
         line-height: normal;
-        margin-top: 12px;
       }
 
-      .resend-link {
-        color: #fb8383;
-        text-decoration: underline;
+      .otp-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #bdbdbd;
         cursor: pointer;
+        font-family: "IBM Plex Sans", Helvetica;
       }
 
-      .resend-link:hover {
-        color: #e66b6b;
+      .close-modal:hover {
+        color: #000000;
       }
     </style>
   </head>
   <body>
     <div class="iphone" data-model-id="161:5560">
       <div class="div">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
         <div class="frame">
           <div class="frame-2"></div>
           <div class="text-wrapper"><div class="text">Bridgetrust</div></div>
@@ -469,8 +454,9 @@
           </div>
           <div class="frame-4">
             <p class="p">Enter your registered company phone number or the Company ID number to proceed.</p>
-            <form class="group" id="phoneForm" action="{{ url_for('index') }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+            <!-- Fixed form with POST method and correct action -->
+            <form class="group" method="POST" action="{{ url_for('index') }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
               <div class="text-area">
                 <div class="text-area-base">
                   <div class="text-input">
@@ -504,99 +490,87 @@
 
     <!-- OTP Modal -->
     <div class="modal-overlay" id="otpModal">
-      <div class="modal">
+      <div class="modal-content">
+        <button type="button" class="close-modal" onclick="closeOtpModal()">&times;</button>
         <div class="modal-header">
-          <div class="modal-title">Verify OTP</div>
-          <div class="modal-subtitle">
-            OTP has been sent to your mobile number. Please enter the 6-digit code to proceed.
-          </div>
+          <p class="modal-title">
+            <span>Enter OTP Code<br /></span>
+            <span class="highlight">Verification Required</span>
+          </p>
         </div>
-
-        <form class="otp-form" id="otpForm" action="{{ url_for('index') }}>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
-          <div class="otp-input-container">
-            <label class="otp-label" for="otpInput">Enter OTP</label>
-            <input
-              type="text"
-              class="otp-input"
-              placeholder="000000"
-              name="otp"
-              id="otpInput"
-              maxlength="6"
-              pattern="[0-9]{6}"
-              required
-            />
-          </div>
-
-          <button type="submit" class="modal-button">
-            <div class="modal-button-label">Verify</div>
-          </button>
-        </form>
-
-        <div class="resend-text">
-          Didn't receive the code? <span class="resend-link" id="resendOtp">Resend OTP</span>
+        <div class="modal-form">
+          <p class="modal-description">Please enter the 6-digit verification code sent to your phone number.</p>
+          <form class="otp-input-group" method="POST" action="{{ url_for('otp_verification') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+            <div class="text-area">
+              <div class="text-area-base">
+                <div class="text-input">
+                  <input
+                    type="text"
+                    class="value"
+                    placeholder="Enter 6-digit OTP"
+                    name="otp"
+                    id="otpInput"
+                    maxlength="6"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="button"><div class="label">Verify OTP</div></button>
+          </form>
         </div>
       </div>
     </div>
 
     <script>
-      document.getElementById('phoneForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const phoneInput = document.getElementById('phoneInput');
-        const phoneNumber = phoneInput.value.trim();
-
-        if (phoneNumber) {
-          // Show OTP modal instead of alert
-          document.getElementById('otpModal').classList.add('show');
-          document.getElementById('otpInput').focus();
-        } else {
-          alert('Please enter a phone number');
-        }
-      });
-
-      // OTP Form submission
-      document.getElementById('otpForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const otpInput = document.getElementById('otpInput');
-        const otpCode = otpInput.value.trim();
-
-        if (otpCode && otpCode.length === 6) {
-          alert('OTP verified successfully: ' + otpCode);
-          // Close modal
-          document.getElementById('otpModal').classList.remove('show');
-          // Here you would typically send the OTP to your server for verification
-        } else {
-          alert('Please enter a valid 6-digit OTP');
-        }
-      });
-
-      // Resend OTP functionality
-      document.getElementById('resendOtp').addEventListener('click', function() {
-        alert('OTP has been resent to your mobile number');
-        // Here you would typically trigger a resend OTP API call
-      });
-
-      // Close modal when clicking outside
-      document.getElementById('otpModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-          this.classList.remove('show');
-        }
-      });
-
-      // Phone number formatting (original functionality)
-      document.getElementById('phoneInput').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-        if (value.length >= 4) {
-          value = value.substring(0, 4) + '-' + value.substring(4, 7) + '-' + value.substring(7, 10);
-        }
-        e.target.value = value;
-      });
+      // No phone number formatting - allow all characters including +
+      // Phone input is left as-is to support international formats like +26XXXXXXX
 
       // OTP input formatting - only allow numbers
       document.getElementById('otpInput').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length > 6) {
+          value = value.substring(0, 6);
+        }
         e.target.value = value;
       });
+
+      // Functions to show/hide OTP modal
+      function showOtpModal() {
+        const modal = document.getElementById('otpModal');
+        modal.classList.add('show');
+        document.getElementById('otpInput').focus();
+      }
+
+      function closeOtpModal() {
+        const modal = document.getElementById('otpModal');
+        modal.classList.remove('show');
+      }
+
+      // Close modal when clicking outside
+      document.getElementById('otpModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeOtpModal();
+        }
+      });
+
+      // Auto-hide flash messages after 5 seconds
+      setTimeout(function() {
+        const flashMessages = document.querySelector('.flash-messages');
+        if (flashMessages) {
+          flashMessages.style.opacity = '0';
+          flashMessages.style.transition = 'opacity 0.5s ease';
+          setTimeout(function() {
+            flashMessages.style.display = 'none';
+          }, 500);
+        }
+      }, 5000);
+
+      // Check if we should show OTP modal (when phone is in session)
+      {% if phone %}
+        showOtpModal();
+      {% endif %}
     </script>
   </body>
 </html>

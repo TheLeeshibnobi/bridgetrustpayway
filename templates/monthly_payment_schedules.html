@@ -1,0 +1,691 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>Monthly Payment Schedules - CBU Portal</title>
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0px;
+        height: 100%;
+        font-family: "IBM Plex Sans Devanagari", Helvetica, Arial, sans-serif;
+        background-color: #f8f9fa;
+      }
+
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      /* Container for all screen sizes */
+      .container {
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        width: 100%;
+        padding: 0;
+      }
+
+      /* Main content wrapper */
+      .main-content {
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 393px;
+        min-height: 100vh;
+        position: relative;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Header section */
+      .header-section {
+        padding: 20px 28px;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e6e6e6;
+      }
+
+      .header-title {
+        font-weight: 500;
+        color: #000000;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 19.2px;
+        margin-bottom: 8px;
+      }
+
+      .header-subtitle {
+        font-weight: 400;
+        color: #a7aaa7;
+        font-size: 12px;
+        letter-spacing: -0.12px;
+        line-height: 18px;
+        margin: 0;
+      }
+
+      /* Payment schedules container */
+      .schedules-container {
+        padding: 20px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-height: calc(100vh - 200px);
+      }
+
+      /* Individual payment schedule card */
+      .payment-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+
+      .payment-card:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .payment-card.selected {
+        background-color: #fff5f5;
+        border-color: #fa0c0c;
+      }
+
+      /* Radio button */
+      .radio-button {
+        position: relative;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 2px solid #5f749f;
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .radio-button::after {
+        content: '';
+        position: absolute;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #fa0c0c;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.3s ease;
+      }
+
+      .payment-card.selected .radio-button {
+        border-color: #fa0c0c;
+      }
+
+      .payment-card.selected .radio-button::after {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      /* Card content */
+      .card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .payment-title {
+        font-weight: 600;
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: normal;
+        margin: 0;
+      }
+
+      .payment-details {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .payment-amount {
+        font-weight: 500;
+        color: #28a745;
+        font-size: 10px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+        padding: 2px 6px;
+        background-color: #e8f5e8;
+        border-radius: 4px;
+      }
+
+      .divider {
+        width: 1px;
+        height: 8px;
+        background-color: #dee2e6;
+      }
+
+      .payment-code {
+        font-weight: 400;
+        color: #666666;
+        font-size: 8px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+
+      .payment-status {
+        font-weight: 400;
+        color: #007bff;
+        font-size: 8px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+        padding: 2px 6px;
+        background-color: #e3f2fd;
+        border-radius: 4px;
+      }
+
+      /* View button */
+      .view-button-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-shrink: 0;
+      }
+
+      .view-button {
+        background-color: rgba(0, 54, 48, 0.1);
+        border: none;
+        border-radius: 5px;
+        padding: 6px 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .view-button:hover {
+        background-color: rgba(0, 54, 48, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .view-button-text {
+        font-weight: 600;
+        color: #323332;
+        font-size: 8px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+      }
+
+      /* Proceed button */
+      .proceed-button-container {
+        position: sticky;
+        bottom: 0;
+        background-color: #ffffff;
+        padding: 20px 28px;
+        border-top: 1px solid #e6e6e6;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .total-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+
+      .total-label {
+        font-weight: 400;
+        color: #666666;
+        font-size: 10px;
+        letter-spacing: -0.08px;
+        line-height: 12px;
+      }
+
+      .total-amount {
+        font-weight: 600;
+        color: #000000;
+        font-size: 14px;
+        letter-spacing: -0.14px;
+        line-height: 20px;
+      }
+
+      .proceed-button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        flex: 1;
+        height: 55px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background-color: #fa0c0c;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .proceed-button:hover {
+        background-color: #e00b0b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(250, 12, 12, 0.3);
+      }
+
+      .proceed-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.6;
+      }
+
+      .proceed-button-text {
+        font-weight: 700;
+        color: #ffffff;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+
+      /* Additional payment cards for demo */
+      .demo-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+      }
+
+      .empty-state-title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .empty-state-subtitle {
+        font-size: 12px;
+        color: #999;
+      }
+
+      /* Tablet styles */
+      @media (min-width: 768px) {
+        .main-content {
+          max-width: 600px;
+          margin: 20px;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+
+        .header-section {
+          padding: 30px 40px;
+        }
+
+        .header-title {
+          font-size: 18px;
+          line-height: 22px;
+        }
+
+        .header-subtitle {
+          font-size: 14px;
+          line-height: 20px;
+        }
+
+        .schedules-container {
+          padding: 30px 40px;
+          gap: 20px;
+        }
+
+        .payment-card {
+          padding: 24px;
+          gap: 16px;
+        }
+
+        .radio-button {
+          width: 18px;
+          height: 18px;
+        }
+
+        .radio-button::after {
+          width: 8px;
+          height: 8px;
+        }
+
+        .payment-title {
+          font-size: 14px;
+        }
+
+        .payment-amount, .payment-code, .payment-status {
+          font-size: 10px;
+        }
+
+        .view-button {
+          padding: 8px 20px;
+        }
+
+        .view-button-text {
+          font-size: 10px;
+        }
+
+        .proceed-button-container {
+          padding: 24px 40px;
+          gap: 24px;
+        }
+
+        .total-label {
+          font-size: 12px;
+        }
+
+        .total-amount {
+          font-size: 16px;
+        }
+
+        .proceed-button {
+          height: 60px;
+          padding: 12px 32px;
+        }
+
+        .proceed-button-text {
+          font-size: 18px;
+        }
+      }
+
+      /* Desktop styles */
+      @media (min-width: 1024px) {
+        .container {
+          padding: 40px;
+        }
+
+        .main-content {
+          max-width: 800px;
+          border-radius: 24px;
+        }
+
+        .header-section {
+          padding: 40px 60px;
+        }
+
+        .header-title {
+          font-size: 20px;
+          line-height: 24px;
+        }
+
+        .header-subtitle {
+          font-size: 16px;
+          line-height: 24px;
+        }
+
+        .schedules-container {
+          padding: 40px 60px;
+          gap: 24px;
+        }
+
+        .payment-card {
+          padding: 28px;
+          gap: 20px;
+        }
+
+        .radio-button {
+          width: 20px;
+          height: 20px;
+        }
+
+        .radio-button::after {
+          width: 10px;
+          height: 10px;
+        }
+
+        .payment-title {
+          font-size: 16px;
+        }
+
+        .payment-amount, .payment-code, .payment-status {
+          font-size: 12px;
+        }
+
+        .view-button {
+          padding: 10px 24px;
+        }
+
+        .view-button-text {
+          font-size: 12px;
+        }
+
+        .proceed-button-container {
+          padding: 30px 60px;
+          gap: 32px;
+        }
+
+        .total-label {
+          font-size: 14px;
+        }
+
+        .total-amount {
+          font-size: 18px;
+        }
+
+        .proceed-button {
+          height: 65px;
+          padding: 16px 40px;
+          max-width: 300px;
+        }
+
+        .proceed-button-text {
+          font-size: 18px;
+        }
+
+        /* Grid layout for larger screens */
+        .demo-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
+        }
+      }
+
+      /* Large desktop styles */
+      @media (min-width: 1440px) {
+        .main-content {
+          max-width: 1000px;
+        }
+
+        .demo-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* Mobile-first responsive adjustments */
+      @media (max-width: 375px) {
+        .header-section {
+          padding: 16px 20px;
+        }
+
+        .schedules-container {
+          padding: 16px 20px;
+        }
+
+        .payment-card {
+          padding: 16px;
+          gap: 10px;
+        }
+
+        .proceed-button-container {
+          padding: 16px 20px;
+          gap: 16px;
+        }
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="header-title">Select Payment Schedules to make payment for</h1>
+                <p class="header-subtitle">Select the upcoming payments you want to process.</p>
+            </div>
+
+            <!-- Payment Schedules Container -->
+            <div class="schedules-container">
+                {% if schedule_data.has_upcoming_payments %}
+                    <div class="demo-cards">
+                        {% for month_data in schedule_data.months_with_payments %}
+                            <div class="payment-card"
+                                 onclick="toggleSelection(this)"
+                                 data-month="{{ month_data.month }}"
+                                 data-loan-count="{{ month_data.loan_count }}"
+                                 data-total-amount="{{ month_data.total_amount }}"
+                                 data-loan-ids="{% for loan in month_data.loans %}{{ loan.loan_id }}{% if not loop.last %},{% endif %}{% endfor %}">
+                                <div class="radio-button"></div>
+                                <div class="card-content">
+                                    <div class="payment-title">{{ month_data.month_display }} Payments</div>
+                                    <div class="payment-details">
+                                        <div class="payment-amount">${{ "%.2f" | format(month_data.total_amount) }}</div>
+                                        <div class="divider"></div>
+                                        <div class="payment-code">{{ month_data.loan_count }} Loan{{ 's' if month_data.loan_count != 1 else '' }}</div>
+                                        <div class="divider"></div>
+                                        <div class="payment-status">Upcoming</div>
+                                    </div>
+                                </div>
+                                <div class="view-button-container">
+                                    <button class="view-button" onclick="event.stopPropagation(); viewDetails('{{ month_data.month }}')">
+                                        <div class="view-button-text">View</div>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-title">No Upcoming Payments</div>
+                        <div class="empty-state-subtitle">All your payments are up to date!</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Proceed Button -->
+            {% if schedule_data.has_upcoming_payments %}
+                <div class="proceed-button-container">
+                    <div class="total-info">
+                        <div class="total-label">Selected Total</div>
+                        <div class="total-amount" id="totalAmount">$0.00</div>
+                    </div>
+                    <button class="proceed-button" id="proceedBtn" disabled onclick="proceedToPayment()">
+                        <div class="proceed-button-text">Proceed to Payment</div>
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        let selectedCards = new Set();
+        let cardData = {};
+
+        // Initialize card data from the template
+        {% if schedule_data.has_upcoming_payments %}
+            {% for month_data in schedule_data.months_with_payments %}
+                cardData['{{ month_data.month }}'] = {
+                    totalAmount: {{ month_data.total_amount }},
+                    loanIds: [{% for loan in month_data.loans %}'{{ loan.loan_id }}'{% if not loop.last %},{% endif %}{% endfor %}]
+                };
+            {% endfor %}
+        {% endif %}
+
+        function toggleSelection(card) {
+            const month = card.dataset.month;
+            const isSelected = card.classList.contains('selected');
+
+            if (isSelected) {
+                card.classList.remove('selected');
+                selectedCards.delete(month);
+            } else {
+                card.classList.add('selected');
+                selectedCards.add(month);
+            }
+
+            updateTotalAndButton();
+        }
+
+        function updateTotalAndButton() {
+            let total = 0;
+            selectedCards.forEach(month => {
+                total += cardData[month].totalAmount;
+            });
+
+            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+
+            const proceedBtn = document.getElementById('proceedBtn');
+            if (selectedCards.size > 0) {
+                proceedBtn.disabled = false;
+                proceedBtn.style.opacity = '1';
+            } else {
+                proceedBtn.disabled = true;
+                proceedBtn.style.opacity = '0.6';
+            }
+        }
+
+        function viewDetails(month) {
+            // Navigate to the staff breakdown page with the month parameter
+            window.location.href = `/staff_breakdown/${month}`;
+        }
+
+        function proceedToPayment() {
+            if (selectedCards.size === 0) return;
+
+            // Collect all loan IDs from selected months
+            let allLoanIds = [];
+            let totalAmount = 0;
+
+            selectedCards.forEach(month => {
+                allLoanIds = allLoanIds.concat(cardData[month].loanIds);
+                totalAmount += cardData[month].totalAmount;
+            });
+
+            console.log('Selected months:', Array.from(selectedCards));
+            console.log('All loan IDs:', allLoanIds);
+            console.log('Total amount:', totalAmount);
+
+            // Route to repayment summary with the collected data
+            const params = new URLSearchParams({
+                loan_ids: allLoanIds.join(','),
+                total: totalAmount.toFixed(2)
+            });
+
+            window.location.href = `/repayment_summary?${params.toString()}`;
+        }
+
+        // Initialize button state
+        updateTotalAndButton();
+    </script>
+</body>
+{% endblock %}

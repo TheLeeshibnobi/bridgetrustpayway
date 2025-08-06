@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bridgetrust</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* white background */
+        }
+
+        .nav {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 50px;
+            background-color: #ffffff; /* white background */
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 15px;
+        }
+
+        .back-arrow {
+            font-size: 22px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .text {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <div class="back-arrow" onclick="goBack()">←</div>
+        <div class="text">Bridgetrust</div>
+    </div>
+
+    <!-- Page content -->
+    {% block content %}{% endblock %}
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>
