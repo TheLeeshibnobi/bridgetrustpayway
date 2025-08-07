@@ -33,12 +33,12 @@ class Organisations:
             organisation_response = (
                 self.supabase
                 .table('organisations')
-                .select('id','name')
+                .select('id','name', 'email')
                 .eq('id', organisation_id)
                 .execute()
             )
 
-            return organisation_response.data[0]['name']
+            return organisation_response.data[0]['name'], organisation_response.data[0]['email']
 
         except Exception as e:
             print(f'Exception: {e}')
@@ -50,7 +50,7 @@ class Organisations:
             organisation_response = (
                 self.supabase
                 .table('organisations')
-                .select('name', 'id')
+                .select('name', 'id', 'email')
                 .execute()
             )
 

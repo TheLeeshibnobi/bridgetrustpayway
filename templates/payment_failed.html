@@ -1,0 +1,455 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0px;
+        height: 100%;
+      }
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+      a {
+        text-decoration: none;
+      }
+      .iphone {
+        background-color: #f5f4f7;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100vw;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .iphone .div {
+        background-color: #f5f4f7;
+        width: 100%;
+        max-width: 393px;
+        min-height: 852px;
+        position: relative;
+        padding-bottom: 40px;
+      }
+
+      /* Desktop styles */
+      @media (min-width: 768px) {
+        .iphone {
+          padding: 40px;
+          align-items: center;
+        }
+        .iphone .div {
+          max-width: 500px;
+          min-height: auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          padding: 40px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .iphone .text-wrapper {
+        position: absolute;
+        width: calc(100% - 98px);
+        top: 47px;
+        left: 49px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #fa0c0c;
+        font-size: 18px;
+        letter-spacing: -0.18px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .text-wrapper {
+          position: static;
+          width: 100%;
+          margin-bottom: 30px;
+          font-size: 24px;
+          text-align: center;
+        }
+      }
+
+      .iphone .frame {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 48px);
+        max-width: 346px;
+        height: auto;
+        min-height: 419px;
+        align-items: center;
+        gap: 24px;
+        padding: 40px 25px;
+        position: absolute;
+        top: 93px;
+        left: 24px;
+        background-color: #ffffff;
+        border-radius: 18px;
+        text-align: center;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .frame {
+          position: static;
+          width: 100%;
+          max-width: none;
+          background-color: transparent;
+          padding: 0;
+          gap: 32px;
+        }
+      }
+
+      .iphone .error-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #fee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+
+      .iphone .error-x {
+        width: 40px;
+        height: 40px;
+        color: #fa0c0c;
+        font-size: 32px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .iphone .status-title {
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        color: #fa0c0c;
+        font-size: 24px;
+        letter-spacing: -0.24px;
+        line-height: 32px;
+        margin-bottom: 8px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .status-title {
+          font-size: 28px;
+          line-height: 36px;
+        }
+      }
+
+      .iphone .status-message {
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #666;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+        margin-bottom: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .status-message {
+          font-size: 18px;
+          line-height: 28px;
+        }
+      }
+
+      .iphone .error-details {
+        width: 100%;
+        background-color: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+      }
+
+      .iphone .error-title {
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #dc2626;
+        font-size: 14px;
+        letter-spacing: -0.14px;
+        line-height: 20px;
+        margin-bottom: 8px;
+      }
+
+      .iphone .error-description {
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #7f1d1d;
+        font-size: 13px;
+        letter-spacing: -0.13px;
+        line-height: 20px;
+      }
+
+      .iphone .transaction-info {
+        width: 100%;
+        background-color: #f9fafb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 32px;
+        text-align: left;
+      }
+
+      .iphone .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .iphone .info-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .iphone .info-label {
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #6b7280;
+        font-size: 14px;
+        letter-spacing: -0.14px;
+        line-height: 20px;
+      }
+
+      .iphone .info-value {
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #111827;
+        font-size: 14px;
+        letter-spacing: -0.14px;
+        line-height: 20px;
+      }
+
+      .iphone .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .button-group {
+          flex-direction: row;
+          gap: 16px;
+        }
+      }
+
+      .iphone .button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        height: 56px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+        white-space: nowrap;
+        flex: 1;
+      }
+
+      .iphone .button-primary {
+        background-color: #fa0c0c;
+        color: white;
+      }
+
+      .iphone .button-primary:hover {
+        background-color: #e00b0b;
+      }
+
+      .iphone .button-secondary {
+        background-color: transparent;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+      }
+
+      .iphone .button-secondary:hover {
+        background-color: #f9fafb;
+        color: #374151;
+      }
+
+      .iphone .support-info {
+        display: flex;
+        width: calc(100% - 94px);
+        max-width: 296px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: absolute;
+        top: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff3cd;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid #ffeaa7;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .support-info {
+          position: static;
+          transform: none;
+          width: 100%;
+          max-width: none;
+          margin-top: 24px;
+        }
+      }
+
+      .iphone .support-icon {
+        width: 16px;
+        height: 16px;
+        color: #b45309;
+      }
+
+      .iphone .support-text {
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #92400e;
+        font-size: 12px;
+        letter-spacing: -0.12px;
+        line-height: 18px;
+        text-align: center;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .support-text {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+
+      /* Large desktop styles */
+      @media (min-width: 1024px) {
+        .iphone .div {
+          max-width: 600px;
+          padding: 60px;
+        }
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 767px) {
+        .iphone .frame {
+          top: 100px;
+        }
+
+        .iphone .support-info {
+          top: 650px;
+        }
+
+        .iphone .button-group {
+          position: absolute;
+          top: 520px;
+          left: 24px;
+          width: calc(100% - 48px);
+          max-width: 346px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="iphone">
+      <div class="div">
+        <div class="text-wrapper">Payment Failed</div>
+
+        <div class="frame">
+          <div class="error-icon">
+            <div class="error-x">✕</div>
+          </div>
+
+          <div>
+            <div class="status-title">Payment Unsuccessful</div>
+            <div class="status-message">Your payment could not be processed at this time.</div>
+          </div>
+
+          <div class="error-details">
+            <div class="error-title">What went wrong?</div>
+            <div class="error-description">
+              {{ error_message if error_message else "The payment was declined by your bank or payment provider. This could be due to insufficient funds, card restrictions, or network issues." }}
+            </div>
+          </div>
+
+          <div class="transaction-info">
+            <div class="info-row">
+              <span class="info-label">Transaction ID:</span>
+              <span class="info-value">{{ transaction_id if transaction_id else "N/A" }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Amount:</span>
+              <span class="info-value">K{{ total_amount if total_amount else "0.00" }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Date & Time:</span>
+              <span class="info-value">{{ timestamp if timestamp else "Just now" }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status:</span>
+              <span class="info-value" style="color: #dc2626;">Failed</span>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="button button-primary" onclick="retryPayment()">
+              Try Again
+            </button>
+            <button type="button" class="button button-secondary" onclick="goBack()">
+              Go Back
+            </button>
+          </div>
+        </div>
+
+        <div class="support-info">
+          <svg class="support-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          </svg>
+          <div class="support-text">
+            Need help? Contact our support team for assistance.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function retryPayment() {
+        // Redirect back to checkout page with the same parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnUrl = urlParams.get('return_url') || '/checkout';
+        window.location.href = returnUrl;
+      }
+
+      function goBack() {
+        // Go back to previous page or dashboard
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = '/dashboard';
+        }
+      }
+
+      // Auto-redirect after 30 seconds (optional)
+      setTimeout(function() {
+        const autoRedirect = confirm('Would you like to try the payment again?');
+        if (autoRedirect) {
+          retryPayment();
+        }
+      }, 30000);
+    </script>
+  </body>
+{% endblock %}

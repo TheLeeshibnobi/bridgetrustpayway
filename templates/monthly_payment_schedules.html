@@ -569,7 +569,7 @@
                                 <div class="card-content">
                                     <div class="payment-title">{{ month_data.month_display }} Payments</div>
                                     <div class="payment-details">
-                                        <div class="payment-amount">${{ "%.2f" | format(month_data.total_amount) }}</div>
+                                        <div class="payment-amount">ZMK{{ "%.2f" | format(month_data.total_amount) }}</div>
                                         <div class="divider"></div>
                                         <div class="payment-code">{{ month_data.loan_count }} Loan{{ 's' if month_data.loan_count != 1 else '' }}</div>
                                         <div class="divider"></div>
@@ -597,7 +597,7 @@
                 <div class="proceed-button-container">
                     <div class="total-info">
                         <div class="total-label">Selected Total</div>
-                        <div class="total-amount" id="totalAmount">$0.00</div>
+                        <div class="total-amount" id="totalAmount">ZMK0.00</div>
                     </div>
                     <button class="proceed-button" id="proceedBtn" disabled onclick="proceedToPayment()">
                         <div class="proceed-button-text">Proceed to Payment</div>
@@ -642,7 +642,8 @@
                 total += cardData[month].totalAmount;
             });
 
-            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('totalAmount').textContent = `ZMW ${total.toFixed(2)}`;
+
 
             const proceedBtn = document.getElementById('proceedBtn');
             if (selectedCards.size > 0) {

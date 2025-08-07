@@ -177,8 +177,14 @@ class Loans:
                                 'loans': []
                             }
 
-                        # Add loan payment to this month
-                        monthly_payment = loan_info.get('monthly_payment', 0.0)
+                        # Add loan payment to this month - FIX: Ensure monthly_payment is numeric
+                        monthly_payment_raw = loan_info.get('monthly_payment')
+                        try:
+                            monthly_payment = float(monthly_payment_raw) if monthly_payment_raw is not None else 0.0
+                        except (ValueError, TypeError):
+                            print(f"Warning: Invalid monthly_payment value for loan {loan_id}: {monthly_payment_raw}")
+                            monthly_payment = 0.0
+
                         months_with_payments[month]['total_amount'] += monthly_payment
                         months_with_payments[month]['loan_count'] += 1
                         months_with_payments[month]['loans'].append({
@@ -190,6 +196,10 @@ class Loans:
 
             # Convert to sorted list by month
             sorted_months = sorted(months_with_payments.values(), key=lambda x: x['month'])
+
+            # Round total_amount to 2 decimal places for display
+            for month_data in sorted_months:
+                month_data['total_amount'] = round(month_data['total_amount'], 2)
 
             return {
                 'months_with_payments': sorted_months,
@@ -424,5 +434,5 @@ class Loans:
 
 
 # Example usage and testing
-test = Loans()
-print(json.dumps(test.get_monthly_payment_schedules_for_template('ee8278fc-66e6-4a0f-a6bb-3525657f98b8')))
+#test = Loans()
+#print(json.dumps(test.get_monthly_payment_schedules_for_template('ee8278fc-66e6-4a0f-a6bb-3525657f98b8')))

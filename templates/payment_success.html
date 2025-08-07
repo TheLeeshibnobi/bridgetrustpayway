@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0px;
+        height: 100%;
+      }
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+      a {
+        text-decoration: none;
+      }
+      .iphone {
+        background-color: #ffffff;
+        display: grid;
+        justify-items: center;
+        align-items: start;
+        width: 100vw;
+        min-height: 100vh;
+        height: 100%;
+      }
+      .iphone .div {
+        background-color: #ffffff;
+        width: 393px;
+        height: 852px;
+        position: relative;
+      }
+      .iphone .text-wrapper {
+        position: absolute;
+        width: 314px;
+        top: 447px;
+        left: 43px;
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 15px;
+        text-align: center;
+        letter-spacing: -0.15px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+      .iphone .warning-circle-check {
+        position: absolute;
+        width: 147px;
+        height: 147px;
+        top: 279px;
+        left: 127px;
+      }
+      .iphone .button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        width: 308px;
+        height: 59px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        position: absolute;
+        top: 484px;
+        left: 46px;
+        background-color: #000000;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .iphone .label {
+        position: relative;
+        width: fit-content;
+        font-family: "Inter-Medium", Helvetica;
+        font-weight: 500;
+        color: var(--neutralswhite);
+        font-size: 18px;
+        letter-spacing: -0.18px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+      .iphone .icon-right-wrapper {
+        position: relative;
+        width: 16px;
+        height: 24px;
+      }
+      .iphone .icon-right {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        top: 0;
+        left: 0;
+      }
+    </style>
+    <div class="iphone">
+      <div class="div">
+        <div class="text-wrapper">Payment Successfully made</div>
+        <img class="warning-circle-check" src="img/circle-check.svg" />
+        <button class="button">
+          <div class="label">View Receipts</div>
+          <div class="icon-right-wrapper">
+            <img class="icon-right" src="img/icon-right.svg" />
+          </div>
+        </button>
+      </div>
+    </div>
+  </body>
+{% endblock %}

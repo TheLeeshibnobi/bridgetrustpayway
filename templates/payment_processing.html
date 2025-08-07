@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0px;
+        height: 100%;
+      }
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+      a {
+        text-decoration: none;
+      }
+      .iphone {
+        background-color: #f5f4f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .iphone .div {
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 393px;
+        min-height: 600px;
+        position: relative;
+        border-radius: 24px;
+        padding: 40px 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      /* Desktop styles */
+      @media (min-width: 768px) {
+        .iphone .div {
+          max-width: 500px;
+          padding: 60px 40px;
+        }
+      }
+
+      .iphone .communication-paper {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 30px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .iphone .status-title {
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        color: #fa0c0c;
+        font-size: 24px;
+        letter-spacing: -0.24px;
+        line-height: 32px;
+        margin-bottom: 16px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .status-title {
+          font-size: 28px;
+          line-height: 36px;
+        }
+      }
+
+      .iphone .text-wrapper {
+        font-family: "IBM Plex Sans Devanagari-Regular", Helvetica;
+        font-weight: 400;
+        color: #666;
+        font-size: 16px;
+        letter-spacing: -0.15px;
+        line-height: 24px;
+        margin-bottom: 40px;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .text-wrapper {
+          font-size: 18px;
+          line-height: 28px;
+        }
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 6px;
+        background-color: #e5e7eb;
+        border-radius: 3px;
+        margin: 30px 0;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background-color: #fa0c0c;
+        border-radius: 3px;
+        width: 0%;
+        animation: progress 60s linear infinite;
+      }
+
+      @keyframes progress {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+
+      .status-text {
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #9ca3af;
+        font-size: 14px;
+        letter-spacing: -0.14px;
+        line-height: 20px;
+        margin-top: 20px;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e5e7eb;
+        border-left: 4px solid #fa0c0c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .timeout-message {
+        display: none;
+        background-color: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .timeout-title {
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #dc2626;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .timeout-text {
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #7f1d1d;
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 16px;
+      }
+
+      .button {
+        all: unset;
+        box-sizing: border-box;
+        display: inline-flex;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background-color: #fa0c0c;
+        color: white;
+        border-radius: 12px;
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .button:hover {
+        background-color: #e00b0b;
+      }
+
+      /* Large desktop styles */
+      @media (min-width: 1024px) {
+        .iphone .div {
+          max-width: 600px;
+          padding: 80px 60px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="iphone">
+      <div class="div">
+        <div class="communication-paper">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="60" fill="#fee2e2"/>
+            <path d="M40 60L50 70L80 40" stroke="#fa0c0c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M60 30L60 50M60 70L60 90" stroke="#fa0c0c" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="25" stroke="#fa0c0c" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+
+        <div class="status-title">Processing Payment</div>
+
+        <p class="text-wrapper" id="status-message">
+          Please confirm the payment by entering your PIN in the popup that appears on your phone.
+        </p>
+
+        <div class="progress-container">
+          <div class="progress-bar"></div>
+        </div>
+
+        <div class="spinner" id="loading-spinner"></div>
+
+        <div class="status-text" id="status-text">
+          Checking payment status...
+        </div>
+
+        <div class="timeout-message" id="timeout-message">
+          <div class="timeout-title">Payment Timeout</div>
+          <div class="timeout-text">
+            We're still waiting for your payment confirmation. You can check the status manually or try again.
+          </div>
+          <button class="button" onclick="checkStatusManually()">
+            Check Status
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const PAYMENT_ID = "{{ payment_id }}";
+      const LOAN_IDS = "{{ loan_ids }}";
+      const TOTAL_AMOUNT = "{{ total_amount }}";
+
+      let checkCount = 0;
+      const MAX_CHECKS = 24; // Check for 2 minutes (24 * 5 seconds)
+      let statusInterval;
+
+      function updateStatus(message) {
+        document.getElementById('status-text').textContent = message;
+      }
+
+      function showTimeoutMessage() {
+        document.getElementById('timeout-message').style.display = 'block';
+        document.getElementById('loading-spinner').style.display = 'none';
+        updateStatus('Payment status check timed out');
+      }
+
+      function redirectToResult(status, data = {}) {
+        const params = new URLSearchParams({
+          status: status,
+          payment_id: PAYMENT_ID,
+          total_amount: TOTAL_AMOUNT,
+          ...data
+        });
+
+        window.location.href = `/payment_result?${params.toString()}`;
+      }
+
+      function checkPaymentStatus() {
+        checkCount++;
+        updateStatus(`Checking payment status... (${checkCount}/${MAX_CHECKS})`);
+
+        fetch(`/check_payment_status/${PAYMENT_ID}?loan_ids=${encodeURIComponent(LOAN_IDS)}&total_amount=${encodeURIComponent(TOTAL_AMOUNT)}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log('Payment status check:', data);
+
+            if (data.status === 'success') {
+              clearInterval(statusInterval);
+              updateStatus('Payment successful! Redirecting...');
+
+              setTimeout(() => {
+                redirectToResult('success', {
+                  successful_loans: JSON.stringify(data.successful_loans || []),
+                  failed_loans: JSON.stringify(data.failed_loans || [])
+                });
+              }, 1000);
+
+            } else if (data.status === 'error') {
+              clearInterval(statusInterval);
+              updateStatus('Error occurred while checking status');
+
+              setTimeout(() => {
+                redirectToResult('failed', {
+                  error: data.error || 'Payment status check failed'
+                });
+              }, 2000);
+
+            } else if (checkCount >= MAX_CHECKS) {
+              clearInterval(statusInterval);
+              showTimeoutMessage();
+            }
+            // If status is 'pending', continue checking
+          })
+          .catch(error => {
+            console.error('Error checking payment status:', error);
+
+            if (checkCount >= MAX_CHECKS) {
+              clearInterval(statusInterval);
+              showTimeoutMessage();
+            }
+          });
+      }
+
+      function checkStatusManually() {
+        document.getElementById('timeout-message').style.display = 'none';
+        document.getElementById('loading-spinner').style.display = 'block';
+        checkCount = 0;
+        statusInterval = setInterval(checkPaymentStatus, 5000);
+        checkPaymentStatus(); // Check immediately
+      }
+
+      // Start checking payment status
+      document.addEventListener('DOMContentLoaded', function() {
+        // Wait 10 seconds before starting to check (give user time to see the message)
+        setTimeout(() => {
+          updateStatus('Waiting for payment confirmation...');
+          statusInterval = setInterval(checkPaymentStatus, 5000);
+          checkPaymentStatus(); // Check immediately
+        }, 10000);
+      });
+
+      // Cleanup interval when page is unloaded
+      window.addEventListener('beforeunload', function() {
+        if (statusInterval) {
+          clearInterval(statusInterval);
+        }
+      });
+    </script>
+  </body>
+{% endblock %}

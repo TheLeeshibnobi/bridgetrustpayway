@@ -1,0 +1,624 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <style>
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+      * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0px;
+        height: 100%;
+      }
+      button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+        outline: -webkit-focus-ring-color auto 5px !important;
+      }
+      a {
+        text-decoration: none;
+      }
+      .iphone {
+        background-color: #f5f4f7;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100vw;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .iphone .div {
+        background-color: #f5f4f7;
+        width: 100%;
+        max-width: 393px;
+        min-height: 852px;
+        position: relative;
+        padding-bottom: 40px;
+      }
+
+      /* Desktop styles */
+      @media (min-width: 768px) {
+        .iphone {
+          padding: 40px;
+          align-items: center;
+        }
+        .iphone .div {
+          max-width: 500px;
+          min-height: auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          padding: 40px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .iphone .text-wrapper {
+        position: absolute;
+        width: calc(100% - 98px);
+        top: 47px;
+        left: 49px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 18px;
+        letter-spacing: -0.18px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .text-wrapper {
+          position: static;
+          width: 100%;
+          margin-bottom: 30px;
+          font-size: 24px;
+          text-align: center;
+        }
+      }
+
+      .iphone .frame {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 48px);
+        max-width: 346px;
+        height: auto;
+        min-height: 419px;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px 25px 30px;
+        position: absolute;
+        top: 93px;
+        left: 24px;
+        background-color: #ffffff;
+        border-radius: 18px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .frame {
+          position: static;
+          width: 100%;
+          max-width: none;
+          background-color: transparent;
+          padding: 0;
+          gap: 24px;
+        }
+      }
+
+      .iphone .vector {
+        position: relative;
+        width: 18px;
+        height: 19.8px;
+      }
+      .iphone .frame-2 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        position: relative;
+        align-self: stretch;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .frame-2 {
+          gap: 8px;
+        }
+      }
+
+      .iphone .text-wrapper-2 {
+        position: relative;
+        align-self: stretch;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .text-wrapper-2 {
+          font-size: 18px;
+        }
+      }
+
+      .iphone .div-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 50px;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+        position: relative;
+        background-color: #f1f3f3;
+        border-radius: 10px;
+      }
+      .iphone .p {
+        position: relative;
+        align-self: stretch;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 8px;
+        letter-spacing: -0.08px;
+        line-height: 15px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .p {
+          font-size: 10px;
+          line-height: 18px;
+        }
+      }
+
+      .iphone .text-wrapper-3 {
+        position: relative;
+        align-self: stretch;
+        margin-top: -1px;
+        font-family: "Inter-Regular", Helvetica;
+        font-weight: 400;
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: -0.12px;
+        line-height: 24px;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .text-wrapper-3 {
+          font-size: 14px;
+        }
+      }
+
+      .iphone .group {
+        width: 100%;
+        position: relative;
+        height: 56px;
+      }
+      .iphone .overlap-group {
+        position: relative;
+        width: 100%;
+        height: 56px;
+        border-radius: 10px;
+        border: 1px solid;
+        border-color: #d4d6da;
+      }
+      .iphone .text-wrapper-4 {
+        position: absolute;
+        width: calc(100% - 80px);
+        top: 13px;
+        left: 70px;
+        font-family: "Inter-Medium", Helvetica;
+        font-weight: 500;
+        color: #bdbdbd;
+        font-size: 20px;
+        letter-spacing: 0;
+        line-height: 28px;
+      }
+      .iphone .text-wrapper-5 {
+        position: absolute;
+        width: 49px;
+        top: 16px;
+        left: 11px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #2d364885;
+        font-size: 15px;
+        letter-spacing: 0;
+        line-height: 21px;
+      }
+      .iphone .group-2 {
+        align-self: stretch;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid;
+        border-color: #d4d6da;
+        position: relative;
+        height: 56px;
+      }
+
+      /* Input field styles */
+      .iphone .phone-input {
+        position: absolute;
+        width: calc(100% - 80px);
+        top: 13px;
+        left: 70px;
+        font-family: "Inter-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 20px;
+        letter-spacing: 0;
+        line-height: 28px;
+        background: transparent;
+        border: none;
+        outline: none;
+      }
+
+      .iphone .phone-input::placeholder {
+        color: #bdbdbd;
+      }
+
+      .iphone .email-input {
+        width: 100%;
+        height: 100%;
+        padding: 16px;
+        font-family: "Inter-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 16px;
+        letter-spacing: 0;
+        line-height: 24px;
+        background: transparent;
+        border: none;
+        outline: none;
+        border-radius: 10px;
+      }
+
+      .iphone .email-input::placeholder {
+        color: #bdbdbd;
+      }
+
+      .iphone .button {
+        all: unset;
+        box-sizing: border-box;
+        display: flex;
+        width: calc(100% - 48px);
+        max-width: 346px;
+        height: 59px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 24px;
+        position: absolute;
+        top: 623px;
+        left: 24px;
+        background-color: #fa0c0c;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .iphone .button:hover:not(:disabled) {
+        background-color: #e00b0b;
+      }
+
+      .iphone .button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .button {
+          position: static;
+          width: 100%;
+          max-width: none;
+          margin-top: 30px;
+          height: 64px;
+          font-size: 18px;
+        }
+      }
+
+      .iphone .label {
+        position: relative;
+        width: fit-content;
+        font-family: "IBM Plex Sans Devanagari-Bold", Helvetica;
+        font-weight: 700;
+        color: white;
+        font-size: 20px;
+        letter-spacing: -0.2px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .label {
+          font-size: 18px;
+        }
+      }
+
+      .iphone .frame-3 {
+        display: flex;
+        width: 140px;
+        height: 42px;
+        align-items: center;
+        gap: 5px;
+        position: absolute;
+        top: 711px;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0.45;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .frame-3 {
+          position: static;
+          transform: none;
+          justify-content: center;
+          margin-top: 20px;
+          width: 100%;
+        }
+      }
+
+      .iphone .visa {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        aspect-ratio: 1;
+      }
+      .iphone .mastercard-logo {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        aspect-ratio: 1;
+      }
+      .iphone .path {
+        position: relative;
+        width: 11.53px;
+        height: 18px;
+        aspect-ratio: 1.64;
+      }
+      .iphone .img {
+        position: relative;
+        width: 29px;
+        height: 14px;
+        aspect-ratio: 2.02;
+      }
+      .iphone .path-2 {
+        position: relative;
+        width: 21px;
+        height: 21px;
+        aspect-ratio: 1;
+      }
+      .iphone .frame-4 {
+        display: flex;
+        width: calc(100% - 94px);
+        max-width: 296px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: absolute;
+        top: 556px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      @media (min-width: 768px) {
+        .iphone .frame-4 {
+          position: static;
+          transform: none;
+          width: 100%;
+          max-width: none;
+          margin-top: 20px;
+        }
+      }
+
+      .iphone .interface-lock {
+        position: relative;
+        width: 20px;
+        height: 20px;
+      }
+      .iphone .text-wrapper-6 {
+        position: relative;
+        width: fit-content;
+        margin-top: -1px;
+        font-family: "IBM Plex Sans Devanagari-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: -0.12px;
+        line-height: 24px;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 768px) {
+        .iphone .text-wrapper-6 {
+          font-size: 14px;
+        }
+      }
+
+      /* Error message styles */
+      .error-message {
+        color: #fa0c0c;
+        font-size: 12px;
+        font-family: "Inter-Regular", Helvetica;
+        margin-top: 4px;
+      }
+
+      .input-error {
+        border-color: #fa0c0c !important;
+      }
+
+      /* Flash message styles */
+      .flash-messages {
+        position: absolute;
+        top: 10px;
+        left: 24px;
+        right: 24px;
+        z-index: 1000;
+      }
+
+      .flash-message {
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        font-family: "Inter-Regular", Helvetica;
+        font-size: 14px;
+      }
+
+      .flash-error {
+        background-color: #fee;
+        color: #d00;
+        border: 1px solid #fcc;
+      }
+
+      .flash-info {
+        background-color: #eff7ff;
+        color: #0066cc;
+        border: 1px solid #b3d9ff;
+      }
+
+      /* Large desktop styles */
+      @media (min-width: 1024px) {
+        .iphone .div {
+          max-width: 600px;
+          padding: 60px;
+        }
+      }
+
+      /* Debug info styles */
+      .debug-info {
+        background: #f0f8ff;
+        border: 1px solid #b0d4f1;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+        font-family: monospace;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .debug-info h4 {
+        margin: 0 0 10px 0;
+        color: #2c5aa0;
+        font-family: sans-serif;
+        font-size: 14px;
+      }
+
+      .debug-info p {
+        margin: 5px 0;
+        color: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="iphone">
+      <div class="div">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="flash-message flash-{{ 'error' if category == 'error' else 'info' }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="text-wrapper">Checkout</div>
+
+        <!-- Debug Info - Remove this in production -->
+        {% if total or loan_ids or month %}
+        <div class="debug-info">
+          <h4>Payment Details:</h4>
+          <p><strong>Total Amount:</strong> ZMK{{ total|default('Not set') }}</p>
+          <p><strong>Transaction Fees:</strong> ZMK{{ transaction_fees|default('Not set') }}</p>
+          <p><strong>Month:</strong> {{ month|default('Not set') }}</p>
+          <p><strong>Loan IDs:</strong> {{ loan_ids|join(', ') if loan_ids else 'None' }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Form that will submit directly to pay route -->
+        <form action="{{ url_for('pay') }}" method="POST" novalidate>
+          <!-- CSRF Token -->
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+
+          <!-- Hidden fields to pass checkout data -->
+          <input type="hidden" name="total_amount" value="{{ total|default('0') }}">
+          <input type="hidden" name="transaction_fees" value="{{ transaction_fees|default('50') }}">
+          <input type="hidden" name="loan_ids" value="{{ loan_ids|join(',') if loan_ids else '' }}">
+          <input type="hidden" name="month" value="{{ month|default('') }}">
+
+          <div class="frame">
+            <img class="vector" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAxOCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMTlIMTdNMTcgMTlWNy41TDE0IDQuNUgxVjE5WiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxwYXRoIGQ9Ik01IDlIOCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxwYXRoIGQ9Ik01IDEzSDEzIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+" />
+            <div class="frame-2">
+              <div class="text-wrapper-2">Receipts</div>
+              <div class="div-wrapper">
+                <p class="p">
+                  The receipts for all your transactions will be sent to your email upon payment.
+                </p>
+              </div>
+            </div>
+            <div class="frame-2">
+              <p class="text-wrapper-3">Enter mobile number to receive your receipt</p>
+              <div class="group">
+                <div class="overlap-group {% if request.args.get('mobile_error') %}input-error{% endif %}">
+                  <input type="tel"
+                         name="mobile_number"
+                         id="mobile_number"
+                         class="phone-input"
+                         placeholder="Enter 10-digit number"
+                         value="{{ request.form.get('mobile_number', '') if request.method == 'POST' else '' }}"
+                         required
+                         pattern="[0-9]{10}"
+                         maxlength="10"
+                         minlength="10"
+                         title="Please enter a 10 digit mobile number (do not include +260)">
+                  <div class="text-wrapper-5">+260</div>
+                </div>
+              </div>
+              {% if request.args.get('mobile_error') %}
+                <div class="error-message">{{ request.args.get('mobile_error') }}</div>
+              {% endif %}
+            </div>
+            <div class="frame-2">
+              <div class="text-wrapper-3">Enter your email (optional)</div>
+              <div class="group-2">
+                <input type="email"
+                       name="email"
+                       id="email"
+                       class="email-input"
+                       value="{{ request.form.get('email', '') if request.method == 'POST' else '' }}"
+                       placeholder="your@email.com">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="button">
+            <div class="label">Pay</div>
+          </button>
+        </form>
+
+        <div class="frame-4">
+          <img class="interface-lock" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1IDlIMTZDMTYuNTUyMyA5IDE3IDkuNDQ3NzIgMTcgMTBWMTZDMTcgMTYuNTUyMyAxNi41NTIzIDE3IDE2IDE3SDRDMy40NDc3MiAxNyAzIDE2LjU1MjMgMyAxNlYxMEMzIDkuNDQ3NzIgMy40NDc3MiA5IDQgOUg1TTUgOVY1QzUgMy44OTU0MyA1Ljg5NTQzIDMgNyAzSDEzQzE0LjEwNDYgMyAxNSAzLjg5NTQzIDE1IDVWOSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" />
+          <div class="text-wrapper-6">Secured payments</div>
+        </div>
+        <div class="frame-3">
+          <img class="visa" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iIzAwNTVBNSIvPgo8dGV4dCB4PSIxMCIgeT0iMTMiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VklTQTwvdGV4dD4KPC9zdmc+" />
+          <img class="mastercard-logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNiIgY3k9IjkiIHI9IjYiIGZpbGw9IiNFQjAwMUIiLz4KPGNpcmNsZSBjeD0iMTIiIGN5PSI5IiByPSI2IiBmaWxsPSIjRkY1RjAwIi8+Cjwvc3ZnPg==" />
+          <img class="path" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxMiAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyIiBoZWlnaHQ9IjE4IiByeD0iMiIgZmlsbD0iIzAwNzlGRiIvPgo8dGV4dCB4PSI2IiB5PSIxMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjYiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BTUVYPC90ZXh0Pgo8L3N2Zz4=" />
+          <img class="img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjkiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAyOSAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI5IiBoZWlnaHQ9IjE0IiByeD0iMiIgZmlsbD0iIzAwMzA4NyIvPgo8dGV4dCB4PSIxNC41IiB5PSI5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlBBWVBBTDwvdGV4dD4KPC9zdmc+" />
+          <img class="path-2" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTAuNSIgY3k9IjEwLjUiIHI9IjEwLjUiIGZpbGw9IiM2NzcyRTUiLz4KPHRleHQgeD0iMTAuNSIgeT0iMTMiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QVBQTEU8L3RleHQ+Cjwvc3ZnPg==" />
+        </div>
+      </div>
+    </div>
+  </body>
+{% endblock %}
