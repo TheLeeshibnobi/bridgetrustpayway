@@ -124,7 +124,7 @@
         background-color: #fa0c0c;
         border-radius: 3px;
         width: 0%;
-        animation: progress 60s linear infinite;
+        animation: progress 30s linear forwards;
       }
 
       @keyframes progress {
@@ -201,10 +201,20 @@
         font-size: 16px;
         cursor: pointer;
         transition: background-color 0.2s ease;
+        margin-right: 10px;
       }
 
       .button:hover {
         background-color: #e00b0b;
+      }
+
+      .button-secondary {
+        background-color: #6b7280;
+        color: white;
+      }
+
+      .button-secondary:hover {
+        background-color: #4b5563;
       }
 
       /* Large desktop styles */
@@ -228,29 +238,32 @@
           </svg>
         </div>
 
-        <div class="status-title">Processing Payment</div>
+        <div class="status-title" id="main-title">Processing Payment</div>
 
         <p class="text-wrapper" id="status-message">
           Please confirm the payment by entering your PIN in the popup that appears on your phone.
         </p>
 
-        <div class="progress-container">
-          <div class="progress-bar"></div>
+        <div class="progress-container" id="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
         </div>
 
         <div class="spinner" id="loading-spinner"></div>
 
         <div class="status-text" id="status-text">
-          Checking payment status...
+          Waiting 15 seconds before checking status...
         </div>
 
         <div class="timeout-message" id="timeout-message">
-          <div class="timeout-title">Payment Timeout</div>
+          <div class="timeout-title">Payment Not Completed</div>
           <div class="timeout-text">
-            We're still waiting for your payment confirmation. You can check the status manually or try again.
+            The payment was not confirmed within the expected time. This could be because you cancelled it or didn't complete the PIN entry.
           </div>
-          <button class="button" onclick="checkStatusManually()">
-            Check Status
+          <button class="button" onclick="goBackToCheckout()">
+            Try Again
+          </button>
+          <button class="button button-secondary" onclick="goHome()">
+            Cancel
           </button>
         </div>
       </div>
@@ -262,20 +275,44 @@
       const TOTAL_AMOUNT = "{{ total_amount }}";
 
       let checkCount = 0;
-      const MAX_CHECKS = 24; // Check for 2 minutes (24 * 5 seconds)
+      const MAX_CHECKS = 6; // Check 6 times (6 * 5 seconds = 30 seconds total)
       let statusInterval;
+      let isPaymentComplete = false;
+      let initialDelayComplete = false;
 
       function updateStatus(message) {
         document.getElementById('status-text').textContent = message;
       }
 
+      function updateTitle(title) {
+        document.getElementById('main-title').textContent = title;
+      }
+
       function showTimeoutMessage() {
+        // Hide loading elements
         document.getElementById('timeout-message').style.display = 'block';
         document.getElementById('loading-spinner').style.display = 'none';
-        updateStatus('Payment status check timed out');
+        document.getElementById('progress-container').style.display = 'none';
+
+        // Update UI to show failure state
+        updateTitle('Payment Not Completed');
+        updateStatus('Ready to try again');
+
+        // Stop any animations
+        const progressBar = document.getElementById('progress-bar');
+        progressBar.style.animation = 'none';
+
+        console.log('⏰ Payment timeout - showing options to user');
       }
 
       function redirectToResult(status, data = {}) {
+        isPaymentComplete = true;
+
+        if (statusInterval) {
+          clearInterval(statusInterval);
+          statusInterval = null;
+        }
+
         const params = new URLSearchParams({
           status: status,
           payment_id: PAYMENT_ID,
@@ -283,20 +320,32 @@
           ...data
         });
 
+        console.log(`🔄 Redirecting to payment result: ${status}`);
         window.location.href = `/payment_result?${params.toString()}`;
       }
 
       function checkPaymentStatus() {
+        if (isPaymentComplete) {
+          console.log('💤 Payment already complete, stopping checks');
+          return;
+        }
+
         checkCount++;
         updateStatus(`Checking payment status... (${checkCount}/${MAX_CHECKS})`);
+
+        console.log(`🔍 Payment status check #${checkCount} for payment ID: ${PAYMENT_ID}`);
 
         fetch(`/check_payment_status/${PAYMENT_ID}?loan_ids=${encodeURIComponent(LOAN_IDS)}&total_amount=${encodeURIComponent(TOTAL_AMOUNT)}`)
           .then(response => response.json())
           .then(data => {
-            console.log('Payment status check:', data);
+            console.log('📦 Payment status response:', data);
 
             if (data.status === 'success') {
+              console.log('✅ Payment successful');
               clearInterval(statusInterval);
+              statusInterval = null;
+              isPaymentComplete = true;
+              updateTitle('Payment Successful!');
               updateStatus('Payment successful! Redirecting...');
 
               setTimeout(() => {
@@ -304,58 +353,144 @@
                   successful_loans: JSON.stringify(data.successful_loans || []),
                   failed_loans: JSON.stringify(data.failed_loans || [])
                 });
-              }, 1000);
+              }, 2000);
+
+            } else if (data.status === 'failed') {
+              console.log('❌ Payment failed/cancelled:', data.reason);
+              clearInterval(statusInterval);
+              statusInterval = null;
+              isPaymentComplete = true;
+
+              const reason = data.reason || 'cancelled';
+              const message = data.message || `Payment was ${reason}`;
+              updateTitle('Payment Failed');
+              updateStatus(`Payment ${reason}`);
+
+              setTimeout(() => {
+                showTimeoutMessage();
+              }, 2000);
 
             } else if (data.status === 'error') {
+              console.log('💥 Payment error:', data.error);
               clearInterval(statusInterval);
+              statusInterval = null;
+              isPaymentComplete = true;
+              updateTitle('Payment Error');
               updateStatus('Error occurred while checking status');
 
               setTimeout(() => {
-                redirectToResult('failed', {
-                  error: data.error || 'Payment status check failed'
-                });
+                showTimeoutMessage();
               }, 2000);
 
-            } else if (checkCount >= MAX_CHECKS) {
-              clearInterval(statusInterval);
-              showTimeoutMessage();
+            } else if (data.status === 'pending') {
+              console.log('⏳ Payment still pending');
+              if (checkCount >= MAX_CHECKS) {
+                console.log('⏰ Reached maximum checks, showing timeout');
+                clearInterval(statusInterval);
+                statusInterval = null;
+                showTimeoutMessage();
+              }
+              // Continue checking if still under max checks
+
+            } else {
+              console.warn('⚠️ Unexpected payment status:', data.status);
+              if (checkCount >= MAX_CHECKS) {
+                clearInterval(statusInterval);
+                statusInterval = null;
+                showTimeoutMessage();
+              }
             }
-            // If status is 'pending', continue checking
           })
           .catch(error => {
-            console.error('Error checking payment status:', error);
+            console.error('🔥 Error checking payment status:', error);
+            updateStatus('Network error while checking status');
 
             if (checkCount >= MAX_CHECKS) {
               clearInterval(statusInterval);
+              statusInterval = null;
               showTimeoutMessage();
             }
           });
       }
 
-      function checkStatusManually() {
-        document.getElementById('timeout-message').style.display = 'none';
-        document.getElementById('loading-spinner').style.display = 'block';
-        checkCount = 0;
-        statusInterval = setInterval(checkPaymentStatus, 5000);
+      function goBackToCheckout() {
+        console.log('🔄 User clicked Try Again - going back to checkout');
+        // Go back to checkout page so user can initiate a new payment
+        window.location.href = '/checkout';
+      }
+
+      function goHome() {
+        console.log('🏠 User clicked Cancel - going to home');
+        window.location.href = '/home';
+      }
+
+      function startStatusChecking() {
+        if (isPaymentComplete || statusInterval) {
+          return;
+        }
+
+        console.log('🚀 Starting payment status checks');
+        updateStatus('Checking payment status...');
+        statusInterval = setInterval(checkPaymentStatus, 5000); // Check every 5 seconds
         checkPaymentStatus(); // Check immediately
       }
 
-      // Start checking payment status
+      // Initialize when page loads
       document.addEventListener('DOMContentLoaded', function() {
-        // Wait 10 seconds before starting to check (give user time to see the message)
-        setTimeout(() => {
-          updateStatus('Waiting for payment confirmation...');
-          statusInterval = setInterval(checkPaymentStatus, 5000);
-          checkPaymentStatus(); // Check immediately
-        }, 10000);
-      });
+        console.log('📱 Payment processing page loaded for payment ID:', PAYMENT_ID);
 
-      // Cleanup interval when page is unloaded
-      window.addEventListener('beforeunload', function() {
-        if (statusInterval) {
-          clearInterval(statusInterval);
+        if (!initialDelayComplete) {
+          initialDelayComplete = true;
+
+          // Countdown timer for initial delay
+          let countdown = 15;
+          const countdownInterval = setInterval(() => {
+            updateStatus(`Waiting ${countdown} seconds before checking status...`);
+            countdown--;
+
+            if (countdown <= 0) {
+              clearInterval(countdownInterval);
+              if (!isPaymentComplete) {
+                startStatusChecking();
+              }
+            }
+          }, 1000);
+
+          console.log('⏰ Starting 15 second countdown before status checks');
         }
       });
+
+      // Cleanup when page unloads
+      window.addEventListener('beforeunload', function() {
+        console.log('🚪 Page unloading, cleaning up intervals');
+        if (statusInterval) {
+          clearInterval(statusInterval);
+          statusInterval = null;
+        }
+        isPaymentComplete = true;
+      });
+
+      // Handle page visibility changes
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          console.log('👁️ Page hidden');
+        } else {
+          console.log('👁️ Page visible again');
+        }
+      });
+
+      // Handle back/forward navigation
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted && isPaymentComplete) {
+          console.log('📄 Page restored from cache after completion, redirecting home');
+          window.location.href = '/home';
+        }
+      });
+
+      // Debug info (can remove in production)
+      setInterval(() => {
+        console.log(`📊 Status: Complete=${isPaymentComplete}, Interval=${!!statusInterval}, Count=${checkCount}/${MAX_CHECKS}`);
+      }, 30000);
     </script>
   </body>
 {% endblock %}

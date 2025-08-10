@@ -101,9 +101,10 @@ class Pay:
             print(f"Failed to get TuMeNy auth token: {e}")
             return None, None
 
-    def check_payment_status(self, payment_id: str) -> bool:
+    def check_payment_status(self, payment_id):
         """
         Checks the status of a Tumeny payment.
+        Returns a dictionary with status information instead of just boolean.
         """
         url = f"https://tumeny.herokuapp.com/api/v1/payment/{payment_id}"
         headers = {
@@ -115,11 +116,19 @@ class Pay:
             response.raise_for_status()
             data = response.json()
             status = data.get("payment", {}).get("status", "").upper()
-            return status == "SUCCESS"
+
+            # Return structured status information
+            if status == "SUCCESS":
+                return {"status": "success", "completed": True}
+            elif status in ["CANCELLED", "CANCELED", "FAILED", "DECLINED"]:
+                return {"status": "failed", "completed": True, "reason": status.lower()}
+            else:
+                # Still pending or unknown status
+                return {"status": "pending", "completed": False}
 
         except requests.exceptions.RequestException as e:
             print(f"❌ Failed to check payment status: {e}")
-            return False
+            return {"status": "error", "completed": True, "reason": "api_error"}
 
     def initiate_payment(self, number, total_amount, transaction_fees, month, loan_id, organisation_name,
                          organisation_email):

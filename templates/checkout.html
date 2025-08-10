@@ -535,7 +535,7 @@
 
         <div class="text-wrapper">Checkout</div>
 
-        <!-- Debug Info - Remove this in production -->
+        <!-- Debug Info - Remove this in production
         {% if total or loan_ids or month %}
         <div class="debug-info">
           <h4>Payment Details:</h4>
@@ -545,6 +545,8 @@
           <p><strong>Loan IDs:</strong> {{ loan_ids|join(', ') if loan_ids else 'None' }}</p>
         </div>
         {% endif %}
+
+        -->
 
         <!-- Form that will submit directly to pay route -->
         <form action="{{ url_for('pay') }}" method="POST" novalidate>
